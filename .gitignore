@@ -1,1 +1,8 @@
 .vagrant
+openafs-robotest
+linux
+amd64_linux26*
+.swp
+.Vagrantfile.swp
+openafs
+afs.keytab
