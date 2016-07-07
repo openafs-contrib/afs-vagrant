@@ -12,7 +12,7 @@ else
   echo "${bold}Bad directory${normal}. Try again with "
   echo "${bold}./afs-vagrant/scripts/bootstrap.sh <box foldername>${normal}"
   echo "or "
-  echo "${bold}curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/scripts/bootstrap.sh | bash -s -- testserver${normal}"
+  echo "${bold}curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/scripts/bootstrap.sh | bash -s -- debian-server${normal}"
   exit 1
 fi
 
