@@ -49,7 +49,10 @@ su -l -c 'cp /vagrant/afs-robotest.conf ~/openafs-robotest/' vagrant
 # Robotest finishing touches
 #  TODO: move these to deploy/push method from dev box
 #  TODO: deal with amd64_linux26-`date +%Y%m%d-%H%M%S`-`git log -n1 --format="%h"`.tar.gz filenames
-su -l -c 'mkdir -p ~/amd64_linux26;tar zxf amd64_linux26-20160707-153401-8b57f9f.tar.gz -C ~/amd64_linux26 --strip-components=1' vagrant
+if [ ! -f /vagrant/amd64_linux26-20160707-153401-8b57f9f.tar.gz ]; then
+  su -l -c 'cd /vagrant;wget --quiet http://download.sinenomine.net/user/jgorse/vagrant/debian-server/amd64_linux26-20160707-153401-8b57f9f.tar.gz' vagrant
+fi
+su -l -c 'cd /vagrant;mkdir -p ~/amd64_linux26;tar zxf amd64_linux26-20160707-153401-8b57f9f.tar.gz -C ~/amd64_linux26 --strip-components=1' vagrant
 su -l -c 'cd ~/openafs-robotest;./afs-robotest setup' vagrant
 echo "You are almost there. Do these next: "
 echo "vagrant ssh"
