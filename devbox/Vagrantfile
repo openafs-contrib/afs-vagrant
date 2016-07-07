@@ -1,0 +1,58 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# https://wiki.openafs.org/HowToBuildOpenAFSFromSource/
+
+Vagrant.configure("2") do |config|
+#  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "bento/debian-8.4"
+  config.vm.hostname = "openafs-devbox"
+  config.vm.synced_folder ".", "/vagrant"
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+
+  ["vmware_fusion", "vmware_workstation", "virtualbox"].each do |provider|
+    config.vm.provider provider do |v, override|
+      host = RbConfig::CONFIG['host_os']
+      v.memory = get_memory_setting(host)
+      v.cpus = get_cpu_setting(host)
+    end
+  end
+
+  # config.vm.provision "shell", inline: $shell
+  config.vm.provision "shell", path: "provision_script.sh"
+
+# e.g. https://github.com/mitchellh/vagrant/blob/master/scripts/website_push_www.sh
+# push to server 1-n, client 1-m
+  config.push.define "www", strategy: "local-exec" do |push|
+    push.script = "scripts/website_push_www.sh"
+  end
+# e.g. https://github.com/mitchellh/vagrant/blob/master/scripts/website_push_docs.sh
+  config.push.define "docs", strategy: "local-exec" do |push|
+    push.script = "scripts/website_push_docs.sh"
+  end
+end
+
+# Use half of the available memory
+def get_memory_setting(host)
+  divider = 2
+  if host =~ /darwin/
+    mem = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / divider
+  elsif host =~ /linux/
+    mem = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / divider
+  else # Windows
+    mem = `for /F "tokens=2 delims==" %i in ('wmic computersystem get TotalPhysicalMemory /value') do @echo %i`.to_i / 1024 / 1024 / divider
+  end
+  return mem
+end
+
+
+def get_cpu_setting(host)
+  if host =~ /darwin/
+    cpus = `sysctl -n hw.ncpu`.to_i
+  elsif host =~ /linux/
+    cpus = `nproc`.to_i
+  else # Windows
+    cpus = `for /F "tokens=2 delims==" %i in ('wmic cpu get NumberOfCores /value') do @echo %i`.to_i
+  end
+  return cpus
+end

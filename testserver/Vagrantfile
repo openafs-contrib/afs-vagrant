@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# https://wiki.openafs.org/HowToBuildOpenAFSFromSource/
+
+Vagrant.configure("2") do |config|
+#  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "bento/debian-8.4"
+  config.vm.hostname = "openafs-testserver"
+  config.vm.synced_folder ".", "/vagrant"
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+
+  ["vmware_fusion", "vmware_workstation", "virtualbox"].each do |provider|
+    config.vm.provider provider do |v, override|
+      host = RbConfig::CONFIG['host_os']
+      v.memory = 768
+      v.cpus = 2
+    end
+  end
+
+  # config.vm.provision "shell", inline: $shell
+  config.vm.provision "shell", path: "provision_script.sh"
+
+end
