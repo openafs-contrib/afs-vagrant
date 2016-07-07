@@ -22,9 +22,12 @@ yes | pip install robotframework
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
 su -l -c 'cd ~/openafs-robotest;./install.sh' vagrant
 # System config for robotest
-cd /usr/bin
-wget http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
+# cd /usr/bin
+# wget http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
+# chmod +x aklog-1.6.18
+cd /vagrant
 chmod +x aklog-1.6.18
+cp aklog-1.6.18 /usr/bin/
 
 # Prepend hosts with our more outside ip address because
 #  loopback does not work for robotest
