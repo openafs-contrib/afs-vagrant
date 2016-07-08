@@ -1,7 +1,10 @@
 # afs-vagrant
 A collection of AFS development containers.
-* devbox - for building the linux kernel and OpenAFS packages, ~15 GB
-* testserver - for running the built packages on linux, e.g. with robotest
+* debian-dev - for building the linux kernel and OpenAFS packages, 
+ * Requires ~5 GB of disk space for the initial bootstrap, ~15 GB for a kernel build
+ * 1/2 of host RAM, and all CPU cores are provided to the guest
+* debian-server - for running the built packages on linux, e.g. with robotest
+ * 1.4 GB of disk space, 768 MB RAM, 2 CPU cores
 
 # Requirements
 ## Mac OS X
