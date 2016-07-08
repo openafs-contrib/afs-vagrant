@@ -1,25 +1,32 @@
 # afs-vagrant
 A collection of AFS development containers.
-* debian-dev - for building the linux kernel and OpenAFS packages, 
+* debian-dev 
+ * for building the linux kernel and OpenAFS packages
  * Requires ~5 GB of disk space for the initial bootstrap, ~15 GB for a kernel build
  * 1/2 of host RAM, and all CPU cores are provided to the guest
-* debian-server - for running the built packages on linux, e.g. with robotest
+* debian-server
+ * for running the built packages on linux, e.g. with robotest
  * 1.4 GB of disk space, 768 MB RAM, 2 CPU cores
 
 # Requirements
-## Mac OS X
-At least 4 GB RAM, 20 GB hard disk space remaining
-### homebrew
+* Mac OS X
+* At least 4 GB RAM, 20 GB hard disk space remaining
+* Xcode or command line developer tools
+* homebrew
+ * VirtualBox & Vagrant
+
+### Setup
 ```
+# Xcode or command line developer tools, some gui interaction
+xcode-select --install
+
+# homebrew & casks
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew tap caskroom/cask
-```
-### VirtualBox and Vagrant via homebrew
-```
-brew install Caskroom/cask/virtualbox Caskroom/cask/virtualbox-extension-pack Caskroom/cask/vagrant
-# may need to enter password
-```
 
+# VirtualBox and Vagrant via homebrew, may require authentication
+brew install Caskroom/cask/virtualbox Caskroom/cask/virtualbox-extension-pack Caskroom/cask/vagrant
+```
 # Usage
 One liner to bring up the afs test box called debian-server:
 ```
