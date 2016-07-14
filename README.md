@@ -36,7 +36,7 @@ xcode-select --install
 brew tap caskroom/cask
 
 # VirtualBox and Vagrant via homebrew, may require authentication
-brew install Caskroom/cask/virtualbox Caskroom/cask/virtualbox-extension-pack Caskroom/cask/vagrant
+brew cask install virtualbox virtualbox-extension-pack vagrant
 ```
 # Usage
 One liner to bring up the afs test box called debian-server:
@@ -51,12 +51,34 @@ git clone https://github.com/openafs-contrib/afs-vagrant.git
 cd afs-vagrant/debian-server
 vagrant up
 ```
-Vagrant survival commands
+### Vagrant survival commands
 ```
+export VAGRANT_LOG = { error | warn | info | debug }
 vagrant help
 vagrant halt   # shutdown
 vagrant reload # halt, up
 vagrant status
+```
+### Troubleshooting Vagrant
+#### [Error: virtualbox is not installed](https://github.com/mitchellh/vagrant/issues/7581)
+"Fixed in master"
+```
+# using rvm 2.2.4-dev and gem install bundler
+git clone https://github.com/mitchellh/vagrant
+cd vagrant
+bundler
+bundle exec vagrant help
+bundle --binstubs exec
+setenv PATH `pwd`/exec:$PATH
+# or
+export PATH=`pwd`/exec:$PATH
+```
+#### Sanity Test
+```
+mkdir tmp && cd tmp
+vagrant init
+vagrant box add bento/debian-8.4 --provider virtualbox
+vagrant up
 ```
 # Contributing
 PRs welcome.
