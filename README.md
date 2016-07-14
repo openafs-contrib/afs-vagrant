@@ -19,13 +19,12 @@ A collection of AFS development containers.
 ## Setup
 ### Homebrew fixes for originally non-admin accounts
 ```
+# Skip this step if you are already admin
 # add the user to :admin group
 sudo dseditgroup -o edit -a <username> -t user admin
 # make sure /usr/local writable for this user
 chgrp -R admin /usr/local
 chmod -R g+w /usr/local
-chgrp -R admin /Library/Caches/Homebrew
-chmod -R g+w /Library/Caches/Homebrew
 ```
 ### Installations
 ```
