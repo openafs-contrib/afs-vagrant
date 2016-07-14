@@ -10,12 +10,24 @@ A collection of AFS development containers.
 
 # Requirements
 * Mac OS X
+ * Admin account (group membership)
 * At least 4 GB RAM, 20 GB hard disk space remaining
 * Xcode or command line developer tools
 * homebrew
  * VirtualBox & Vagrant
 
-### Setup
+## Setup
+### Homebrew fixes for originally non-admin accounts
+```
+# add the user to :admin group
+sudo dseditgroup -o edit -a <username> -t user admin
+# make sure /usr/local writable for this user
+chgrp -R admin /usr/local
+chmod -R g+w /usr/local
+chgrp -R admin /Library/Caches/Homebrew
+chmod -R g+w /Library/Caches/Homebrew
+```
+### Installations
 ```
 # Xcode or command line developer tools, some gui interaction
 xcode-select --install
