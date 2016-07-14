@@ -30,12 +30,22 @@ chmod +x aklog-1.6.18
 cp aklog-1.6.18 /usr/bin/
 
 # Prepend hosts with our more outside ip address because
-#  loopback does not work for robotest
-cd ~/
+#  loopback does not work for robotest.
+# Run this on boot hereon out
+DEBIAN_INIT="/etc/init.d/vagrant_init"
+if [ ! -f "${DEBIAN_INIT}" ]; then
+cat <<EOF > ${DEBIAN_INIT}
+#!/bin/bash
+# ${DEBIAN_INIT}
+cd /tmp
 grep -v `hostname` /etc/hosts > tmp
 rm /etc/hosts
 echo `hostname -I` `hostname`.local `hostname` | cat - tmp > /etc/hosts
 rm tmp
+EOF
+chmod +x ${DEBIAN_INIT}
+${DEBIAN_INIT}
+fi
 
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.

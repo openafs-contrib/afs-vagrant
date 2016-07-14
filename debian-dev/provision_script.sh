@@ -22,6 +22,24 @@ for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64 opena
   apt-get build-dep -y $package
 done
 
+# Prepend hosts with our more outside ip address because
+#  loopback does not work for robotest.
+# Run this on boot hereon out
+DEBIAN_INIT="/etc/init.d/vagrant_init"
+if [ ! -f "${DEBIAN_INIT}" ]; then
+cat <<EOF > ${DEBIAN_INIT}
+#!/bin/bash
+# ${DEBIAN_INIT}
+cd /tmp
+grep -v `hostname` /etc/hosts > tmp
+rm /etc/hosts
+echo `hostname -I` `hostname`.local `hostname` | cat - tmp > /etc/hosts
+rm tmp
+EOF
+chmod +x ${DEBIAN_INIT}
+${DEBIAN_INIT}
+fi
+
 # Get our repos
 su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
