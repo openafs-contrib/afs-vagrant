@@ -41,7 +41,7 @@ brew install Caskroom/cask/virtualbox Caskroom/cask/virtualbox-extension-pack Ca
 # Usage
 One liner to bring up the afs test box called debian-server:
 ```
-curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/scripts/bootstrap.sh | bash -s -- debian-server
+curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/script/bootstrap.sh | bash -s -- debian-server
 ```
 Note the addition of the directory as the first argument (debian-server) to the bootstrap.sh command.
 
