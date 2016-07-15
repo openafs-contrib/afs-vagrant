@@ -7,7 +7,9 @@ Vagrant.configure("2") do |config|
 #  config.vm.box = "hashicorp/precise64"
   config.vm.box = "bento/debian-8.4"
   config.vm.hostname = "openafs-debian-dev"
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.network "private_network", type: "dhcp"
+#  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs"
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   ["vmware_fusion", "vmware_workstation", "virtualbox"].each do |provider|
@@ -32,9 +34,10 @@ Vagrant.configure("2") do |config|
   end
 end
 
-# Use half of the available memory
+# Use 1/divider of the available memory
+# TODO: use 1/divider or 2 GB, whichever is larger
 def get_memory_setting(host)
-  divider = 2
+  divider = 4
   if host =~ /darwin/
     mem = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / divider
   elsif host =~ /linux/
@@ -44,7 +47,6 @@ def get_memory_setting(host)
   end
   return mem
 end
-
 
 def get_cpu_setting(host)
   if host =~ /darwin/
