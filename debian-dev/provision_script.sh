@@ -12,7 +12,7 @@ apt-get update
 
 # Install dependencies, Git, and stuff
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
-for package in git-core build-essential libncurses5-dev fakeroot python-pip kernel-package; do
+for package in git-core build-essential libncurses5-dev fakeroot python-pip kernel-package nfs-kernel-server vim; do
   apt-get install -y $package
 done
 # apt-get remove -y kernel-package fakeroot
@@ -24,7 +24,8 @@ done
 
 # Prepend hosts with our more outside ip address because
 #  loopback does not work for robotest.
-# Run this on boot hereon out
+# Run this on boot hereon out.
+# NOTE: Does not work for multiple IP interfaces
 DEBIAN_INIT="/etc/init.d/vagrant_init"
 if [ ! -f "${DEBIAN_INIT}" ]; then
 cat <<EOF > ${DEBIAN_INIT}
@@ -50,6 +51,7 @@ su -l -c 'pip install robotframework;cd ~/openafs-robotest;./install.sh' vagrant
 # if it's not already there.
 grep -q 'cd /vagrant' /home/vagrant/.bash_profile || echo 'cd /vagrant' >> /home/vagrant/.bash_profile
 su -l -c 'cd /vagrant;ln -s ~/linux; ln -s ~/linux /usr/src/linux;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
+su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 
 #5.3 gb
 # Touch the marker file so we don't do this again

@@ -63,6 +63,7 @@ if [ ! -f /vagrant/amd64_linux26-20160707-153401-8b57f9f.tar.gz ]; then
   su -l -c 'cd /vagrant;wget --quiet http://download.sinenomine.net/user/jgorse/vagrant/debian-server/amd64_linux26-20160707-153401-8b57f9f.tar.gz' vagrant
 fi
 su -l -c 'cd /vagrant;mkdir -p ~/amd64_linux26;tar zxf amd64_linux26-20160707-153401-8b57f9f.tar.gz -C ~/amd64_linux26 --strip-components=1' vagrant
+su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 su -l -c 'cd ~/openafs-robotest;./afs-robotest setup' vagrant
 echo "You are almost there. Do these next: "
 echo "vagrant ssh"
