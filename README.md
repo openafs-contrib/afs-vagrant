@@ -28,8 +28,10 @@ brew tap caskroom/cask
 
 # Vagrant via homebrew, may require authentication
 brew cask install vagrant
-
-Note: Vagrant will install a compatible version of "virtualbox virtualbox-extension-pack" automatically.
+```
+Note: Vagrant can sometimes install a compatible version of "virtualbox virtualbox-extension-pack" automatically. If it does not, run this:
+```
+brew cask install virtualbox virtualbox-extension-pack
 ```
 # Usage
 One liner to bring up the afs test box called debian-server:
