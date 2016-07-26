@@ -18,6 +18,7 @@ kernel-package nfs-kernel-server vim vim-addon-manager strace elfutils; do
 done
 # apt-get remove -y kernel-package fakeroot
 su -l -c 'vim-addons install systemtap' vagrant
+yes | pip install robotframework
 
 # interactive selection of kernel conf file and kernel-package prevents touch-free install
 for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64 openafs; do
