@@ -50,7 +50,7 @@ fi
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
 # grep -q 'cd /vagrant' /home/vagrant/.bash_profile || echo 'cd /vagrant' >> /home/vagrant/.bash_profile
-grep -q 'cd ~/openafs-robotest' /home/vagrant/.bash_profile || echo 'cd ~/openafs-robotest' >> /home/vagrant/.bash_profile
+grep -q 'cd ~/openafs-robotest' /home/vagrant/.bash_profile || su -l -c 'echo "cd /vagrant" >> /home/vagrant/.bash_profile' vagrant
 
 su -l -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa' vagrant
 su -l -c 'cd /vagrant;ln -s ~/openafs-robotest' vagrant
