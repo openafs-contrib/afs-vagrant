@@ -58,9 +58,8 @@ su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 
-echo "You are almost there. Do these next: "
+echo "You are almost there. Do this next: "
 echo "vagrant ssh"
-echo "./afs-robotest run"
 echo "NOTE: /vagrant on the guest vm is shared with your current directory"
 
 #5.3 gb
