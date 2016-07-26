@@ -17,6 +17,7 @@ kernel-package nfs-kernel-server vim vim-addon-manager strace elfutils; do
   apt-get install -y $package
 done
 # apt-get remove -y kernel-package fakeroot
+# TODO: does not work yet, vim-addons
 su -l -c 'vim-addons install systemtap' vagrant
 yes | pip install robotframework
 
@@ -56,6 +57,11 @@ grep -q 'cd /vagrant' /home/vagrant/.bash_profile || echo 'cd /vagrant' >> /home
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
+
+echo "You are almost there. Do these next: "
+echo "vagrant ssh"
+echo "./afs-robotest run"
+echo "NOTE: /vagrant on the guest vm is shared with your current directory"
 
 #5.3 gb
 # Touch the marker file so we don't do this again
