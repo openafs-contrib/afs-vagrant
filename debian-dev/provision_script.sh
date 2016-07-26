@@ -28,8 +28,9 @@ for package in git-core build-essential libncurses5-dev fakeroot python-pip \
 done
 apt-get install -y kernel-package --no-install-recommends
 # apt-get remove -y kernel-package fakeroot
-# TODO: does not work yet, vim-addons
-su -l -c 'vim-addons install systemtap' vagrant
+
+# TODO: Systemtap vim addons needs systemtap first.
+# su -l -c 'vim-addons install systemtap' vagrant
 yes | pip install robotframework
 
 # interactive selection of kernel conf file and kernel-package prevents touch-free install
@@ -65,6 +66,8 @@ fi
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
 su -l -c 'pip install robotframework;cd ~/openafs-robotest;./install.sh' vagrant
+
+# TODO: copy common files from shared host dir to guest's directory on host. do in bootstrap.sh
 
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
