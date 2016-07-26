@@ -12,10 +12,12 @@ apt-get update
 
 # Install dependencies, Git, and stuff
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
-for package in git-core build-essential libncurses5-dev fakeroot python-pip kernel-package nfs-kernel-server vim; do
+for package in git-core build-essential libncurses5-dev fakeroot python-pip \
+kernel-package nfs-kernel-server vim vim-addon-manager strace elfutils; do
   apt-get install -y $package
 done
 # apt-get remove -y kernel-package fakeroot
+su -l -c 'vim-addons install systemtap' vagrant
 
 # interactive selection of kernel conf file and kernel-package prevents touch-free install
 for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64 openafs; do
