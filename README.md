@@ -17,15 +17,6 @@ A collection of AFS development containers.
  * Vagrant (and VirtualBox)
 
 ## Setup
-### Homebrew fixes for originally non-admin accounts
-```
-# Skip this step if you are already admin
-# add the user to :admin group
-sudo dseditgroup -o edit -a <username> -t user admin
-# make sure /usr/local writable for this user
-chgrp -R admin /usr/local
-chmod -R g+w /usr/local
-```
 ### Installations
 ```
 # Xcode or command line developer tools, some gui interaction
@@ -61,7 +52,8 @@ vagrant halt   # shutdown
 vagrant reload # halt, up
 vagrant status
 ```
-### Troubleshooting Vagrant
+### Troubleshooting
+#### Vagrant:
 #### [Error: virtualbox is not installed](https://github.com/mitchellh/vagrant/issues/7581)
 "Fixed in master"
 ```
@@ -74,6 +66,15 @@ bundle --binstubs exec
 setenv PATH `pwd`/exec:$PATH
 # or
 export PATH=`pwd`/exec:$PATH
+```
+#### Homebrew fixes for originally non-admin accounts
+```
+# Skip this step if you are already admin
+# add the user to :admin group
+sudo dseditgroup -o edit -a <username> -t user admin
+# make sure /usr/local writable for this user
+chgrp -R admin /usr/local
+chmod -R g+w /usr/local
 ```
 #### Sanity Test
 ```
