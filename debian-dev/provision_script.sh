@@ -62,7 +62,7 @@ ${DEBIAN_INIT}
 fi
 
 # Fix bash history search
-cat <<EOF > /home/vagrant/.inputrc
+cat <<"EOF" > /home/vagrant/.inputrc
 ## arrow up
 "\e[A":history-search-backward
 ## arrow down
