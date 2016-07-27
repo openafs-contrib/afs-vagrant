@@ -74,8 +74,8 @@ chown vagrant:vagrant /home/vagrant/.inputrc
 cd /home/vagrant
 patch <<"EOF"
 --- /etc/skel/.bashrc	2014-11-12 23:08:49.000000000 +0000
-+++ /home/vagrant/.bashrc	2016-07-26 21:14:43.431739303 +0000
-@@ -25,10 +25,10 @@
++++ /home/vagrant/.bashrc	2016-07-27 02:18:06.428000000 +0000
+@@ -25,10 +25,14 @@
 
  # If set, the pattern "**" used in a pathname expansion context will
  # match all files and zero or more directories and subdirectories.
@@ -83,12 +83,15 @@ patch <<"EOF"
 +shopt -s globstar
 
  # make less more friendly for non-text input files, see lesspipe(1)
--#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+ #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
++if [ -x /usr/bin/pygmentize ]; then
++  export LESSOPEN='|pygmentize %s'
++  export LESS='-R'
++fi
 
  # set variable identifying the chroot you work in (used in the prompt below)
  if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-@@ -43,7 +43,7 @@
+@@ -43,7 +47,7 @@
  # uncomment for a colored prompt, if the terminal has the capability; turned
  # off by default to not distract the user: the focus in a terminal window
  # should be on the output of commands, not on the prompt
@@ -97,7 +100,7 @@ patch <<"EOF"
 
  if [ -n "$force_color_prompt" ]; then
      if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-@@ -76,21 +76,21 @@
+@@ -76,21 +80,21 @@
  if [ -x /usr/bin/dircolors ]; then
      test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
      alias ls='ls --color=auto'
