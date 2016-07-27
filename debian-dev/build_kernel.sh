@@ -41,8 +41,12 @@ fi
 echo "Start the build."
 
 ## Get the source
-wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.xz
-wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.sign
+if [ ! -f linux-${V}.tar.xz ] && [ ! -f linux-${V}.tar ]; then
+  wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.xz
+fi
+if [ ! -f linux-${V}.tar.sign ]; then
+  wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.sign
+fi
 unxz linux-${V}.tar.xz
 gpg --keyserver-options auto-key-retrieve --verify linux-${V}.tar.sign linux-${V}.tar
 if [ $? -ne 0 ]; then
