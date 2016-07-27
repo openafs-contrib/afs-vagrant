@@ -37,6 +37,8 @@ brew cask install virtualbox virtualbox-extension-pack
 One liner to bring up the afs test box called debian-server:
 ```
 curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/script/bootstrap.sh | bash -s -- debian-server
+OR
+curl -fsSL https://raw.githubusercontent.com/openafs-contrib/afs-vagrant/master/script/bootstrap.sh | bash -s -- debian-dev
 ```
 Note the addition of the directory as the first argument (debian-server) to the bootstrap.sh command.
 
