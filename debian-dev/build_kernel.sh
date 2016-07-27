@@ -33,7 +33,7 @@ if [ $i == 3 ]; then
   # We were able to download the debian packages. Now install them and quit.
   echo "Run the following command to complete install:"
   echo "  sudo dpkg -i ${deb_packages}"
-  echp "  Consider: --kernelsourcedir /usr/src/linux-headers-$V3"
+  echo "  Consider: --kernelsourcedir /usr/src/linux-headers-$V3"
   echo "All done with kernel $V3! NOTE: Check your guest kernel module."
   exit 0
 fi
