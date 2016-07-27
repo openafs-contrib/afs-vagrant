@@ -20,7 +20,7 @@ EOF
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
-    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex linux-headers-`uname -r` \   # AFS build deps
+    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex linux-headers-`uname -r` \
     strace elfutils cscope \
     vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
   echo "apt-get install -y $package"
