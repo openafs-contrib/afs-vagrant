@@ -4,9 +4,6 @@ MARKER_FILE="/usr/local/etc/vagrant_provision_marker"
 if [ -f "${MARKER_FILE}" ]; then
   exit 0
 fi
-# Update apt
-apt-get update
-
 # Add the vagrant user to the RVM group
 #usermod -a -G rvm vagrant
 
@@ -17,6 +14,9 @@ Package: texlive*
 Pin: release *
 Pin-Priority: -1
 EOF
+
+# Update apt
+apt-get update
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
