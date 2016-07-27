@@ -70,17 +70,18 @@ sudo fakeroot make-kpkg clean
 export CONCURRENCY_LEVEL=`nproc`
 sudo fakeroot make-kpkg --initrd --revision=1 kernel_image kernel_headers kernel_debug -j`nproc`
 #sudo chown -R vagrant:vagrant ../
-sudo cp vmlinux /boot/vmlinux-`make kernelversion`
+V3=`make kernelversion`
+sudo cp vmlinux /boot/vmlinux-${V3}
 
 ### Install .deb packages
-sudo dpkg -i ../linux-headers-`make kernelversion`_1_amd64.deb \
-  ../linux-image-`make kernelversion`_1_amd64.deb \
-  ../linux-image-`make kernelversion`-dbg_1_amd64.deb
+sudo V3=${V3} dpkg -i ../linux-headers-${V3}_1_amd64.deb \
+  ../linux-image-${V3}_1_amd64.deb \
+  ../linux-image-${V3}-dbg_1_amd64.deb
 
 ### Push .deb packages
-scp ../linux-headers-`make kernelversion`_1_amd64.deb \
-  ../linux-image-`make kernelversion`_1_amd64.deb \
-  ../linux-image-`make kernelversion`-dbg_1_amd64.deb \
+scp ../linux-headers-${V3}_1_amd64.deb \
+  ../linux-image-${V3}_1_amd64.deb \
+  ../linux-image-${V3}-dbg_1_amd64.deb \
   jgorse@sftp.sinenomine.net:/afs/sinenomine.net/user/jgorse/public/debian8x64/
 
 # We now have the following packages in the directory above:
