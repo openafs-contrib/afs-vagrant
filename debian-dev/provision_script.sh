@@ -8,6 +8,22 @@ fi
 # Add the vagrant user to the RVM group
 #usermod -a -G rvm vagrant
 
+# Get rid of the /boot partition, we need the space.
+cp -a /boot /boot-tmp
+if [ $? -eq 0 ]; then
+  echo "Merging /boot partition with /"
+  umount /boot
+  rmdir /boot
+  mv /boot-tmp /boot
+  if [ ! -f /etc/fstab.bkup ]; then
+    cp /etc/fstab /etc/fstab.bkup
+  fi
+  grep -r "/boot" /etc/fstab.bkup >! /etc/fstab
+  update-grub
+else
+  echo "/boot and /boot-tmp are different. Aborted the merge of /boot to /."
+fi
+
 # Install dependencies, Git, and stuff
 # First, blacklist some of the heavy packages
 cat <<EOF > /etc/apt/preferences.d/01texlive-exclude
