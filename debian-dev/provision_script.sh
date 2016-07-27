@@ -213,7 +213,7 @@ su -l -c 'mkdir -p ~/.afsrobotestrc;ln -sf /vagrant/afs-robotest.conf ~/.afsrobo
 su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
-  wget http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
+  wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
 fi
 if [ ! -f /usr/bin/aklog-1.6.18 ]; then
   cp /vagrant/aklog-1.6.18 /usr/bin/aklog-1.6.18
