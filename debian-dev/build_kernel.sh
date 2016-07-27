@@ -6,7 +6,7 @@ cd ~/
 
 # Path 1, official tarball
 export V=4.7    # release version
-export V3=4.7.1 # release version, triplet
+export V3=4.7.0 # release version, triplet
 
 ## Before building, can we cheat? Has this been done before...
 deb_packages="linux-headers-${V3}_1_amd64.deb linux-image-${V3}_1_amd64.deb \
@@ -15,12 +15,17 @@ linux-image-${V3}-dbg_1_amd64.deb"
 # Counter variable for found deb packages
 i=0
 for deb in ${deb_packages}; do
-  wget http://download.sinenomine.net/user/jgorse/debian8x64/${deb}
-  if [ $? -ne 0 ]; then
-    echo "No archived kernel, time to build."
-    break
+  if [ ! -f ${deb} ]; then
+    wget http://download.sinenomine.net/user/jgorse/debian8x64/${deb}
+    if [ $? -ne 0 ]; then
+      echo "No archived kernel, time to build."
+      break
+    else
+      (( i++ ))
+    fi
   else
-    ((i++))
+    (( i++ ))
+    echo "Found local package ${i} ${deb}"
   fi
 done
 echo "Got ${i} prebuilt packages."
