@@ -33,7 +33,7 @@ if [ $i == 3 ]; then
   # We were able to download the debian packages. Now install them and quit.
   echo "Run the following command to complete install:"
   echo "  sudo dpkg -i ${deb_packages}"
-  echo "  Consider: --kernelsourcedir /usr/src/linux-headers-$V3"
+  echo "  Consider: dkms --kernelsourcedir /usr/src/linux-headers-$V3"
   echo "All done with kernel $V3! NOTE: Check your guest kernel module."
   exit 0
 fi
@@ -106,13 +106,19 @@ scp ../linux-headers-`make kernelversion`_1_amd64.deb \
 
 # VV=5.1.2
 VV=$(curl http://download.virtualbox.org/virtualbox/LATEST.TXT)
-wget http://download.virtualbox.org/virtualbox/${VV}/VBoxGuestAdditions_${VV}.iso
-sudo mkdir /media/VBoxGuestAdditions
-sudo mount -o loop,ro VBoxGuestAdditions_${VV}.iso /media/VBoxGuestAdditions
-sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+if [ ! -f VBoxGuestAdditions_${VV}.iso ]; then
+  wget http://download.virtualbox.org/virtualbox/${VV}/VBoxGuestAdditions_${VV}.iso
+fi
+# Pass these variables to sudo
+sudo VV=${VV} V3=${V3} -s
+mkdir /media/VBoxGuestAdditions
+mount -o loop,ro VBoxGuestAdditions_${VV}.iso /media/VBoxGuestAdditions
+export KERN_DIR=/usr/src/linux-headers-${V3}
+sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
 rm VBoxGuestAdditions_${VV}.iso
-sudo umount /media/VBoxGuestAdditions
-sudo rmdir /media/VBoxGuestAdditions
+umount /media/VBoxGuestAdditions
+rmdir /media/VBoxGuestAdditions
+exit
 
 ### OR
 # VV=$(http://download.virtualbox.org/virtualbox/LATEST.TXT)
