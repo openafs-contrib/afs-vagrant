@@ -89,7 +89,28 @@ scp ../linux-headers-`make kernelversion`_1_amd64.deb \
 #sudo cp vmlinux /boot/vmlinux-`make kernelversion`
 
 ## Rebuild guest VM kmod
-#tbd
+### GUI Method
+# Make sure CD is inserted: /Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
+# This is often optional...
+# sudo mount /dev/cdrom /media/cdrom
+# sudo sh /media/cdrom/VBoxLinuxAdditions.run
+
+### OR
+### CL GUEST Method
+
+# VV=5.1.2
+# VV=$(http://download.virtualbox.org/virtualbox/LATEST.TXT)
+# wget http://download.virtualbox.org/virtualbox/${VV}/VBoxGuestAdditions_${VV}.iso
+# sudo mkdir /media/VBoxGuestAdditions
+# sudo mount -o loop,ro VBoxGuestAdditions_${VV}.iso /media/VBoxGuestAdditions
+# sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+# rm VBoxGuestAdditions_${VV}iso
+# sudo umount /media/VBoxGuestAdditions
+# sudo rmdir /media/VBoxGuestAdditions
+
+### OR
+# VV=$(http://download.virtualbox.org/virtualbox/LATEST.TXT)
+# http://download.virtualbox.org/virtualbox/${VV}/
 
 echo Success! Reboot!
 
