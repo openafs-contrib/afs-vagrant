@@ -43,7 +43,7 @@ echo "Start the build."
 ## Get the source
 wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.xz
 wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${V}.tar.sign
-unxz linux-4.7.tar.xz
+unxz linux-${V}.tar.xz
 gpg --keyserver-options auto-key-retrieve --verify linux-${V}.tar.sign linux-${V}.tar
 if [ $? -ne 0 ]; then
   echo "The tarball's authenticity is suspect."
