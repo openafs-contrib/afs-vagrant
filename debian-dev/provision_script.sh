@@ -21,7 +21,7 @@ EOF
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex linux-headers-`uname -r` \   # AFS build deps
-    strace elfutils \
+    strace elfutils cscope \
     vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
   echo "apt-get install -y $package"
   apt-get install -y $package
@@ -129,6 +129,21 @@ patch <<"EOF"
  # Alias definitions.
  # You may want to put all your additions into a separate file like
 EOF
+
+# Vim setup
+cat <<EOF > /home/vagrant/.vimrc
+set nocompatible
+syntax on
+source /home/vagrant/.vim/cscope_maps.vim
+autocmd BufRead,BufNewFile *.strace set filetype=strace
+EOF
+chown vagrant:vagrant /home/vagrant/.vimrc
+if [ ! -d /home/vagrant/.vim ]; then
+    echo No ~/vim dir. Making it...
+    su -l -c 'mkdir /home/vagrant/.vim' vagrant
+fi
+cd /home/vagrant/.vim
+wget http://cscope.sourceforge.net/cscope_maps.vim
 
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
