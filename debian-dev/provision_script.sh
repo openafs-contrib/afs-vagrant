@@ -95,7 +95,7 @@ patch <<"EOF"
  # make less more friendly for non-text input files, see lesspipe(1)
  #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 +if [ -x /usr/bin/pygmentize ]; then
-+  export LESSOPEN='|pygmentize %s'
++  export LESSOPEN='|~/.lessfilter %s'
 +  export LESS='-R'
 +fi
 
@@ -157,6 +157,43 @@ if [ ! -d /home/vagrant/.vim ]; then
 fi
 cd /home/vagrant/.vim
 wget http://cscope.sourceforge.net/cscope_maps.vim
+
+cat <<EOF > /home/vagrant/.lessfilter
+#!/bin/bash
+
+# paraiso-dark native vim
+pygmentize_opts="-f terminal256 -O style=native"
+shopt -s extglob
+lexers="+($(pygmentize -L lexers |
+           perl -ne 'print join("|", split(/, /,$1)) . "|" if /\(filenames ([^\)]+)\)/' |
+           sed 's/|$//'))"
+
+case "$1" in
+    $lexers)
+        pygmentize -f 256 "$1";;
+    .bashrc|.bash_aliases|.bash_environment)
+        pygmentize -f 256 -l sh "$1"
+        ;;
+    afs-robotest)
+        pygmentize -f 256 -l py "$1"
+        ;;
+
+    *)
+        grep "#\!/bin/bash" "$1" > /dev/null
+        if [ "0" -eq "0" ]; then
+            pygmentize -f 256 -l sh "$1"
+        fi
+        head -n1 "$1" | grep "python" > /dev/null
+        if [ "0" -eq "0" ]; then
+            pygmentize -f 256 -l py "$1"
+        else
+            exit 1
+        fi
+esac
+exit 0
+EOF
+chown vagrant:vagrant /home/vagrant/.lessfilter
+cmod a+x /home/vagrant/.lessfilter
 
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
