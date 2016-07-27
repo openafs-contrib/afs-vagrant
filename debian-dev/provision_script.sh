@@ -61,6 +61,14 @@ chmod +x ${DEBIAN_INIT}
 ${DEBIAN_INIT}
 fi
 
+# Fix bash history search
+cat <<EOF > /home/vagrant/.inputrc
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
+EOF
+chown vagrant:vagrant /home/vagrant/.inputrc
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
