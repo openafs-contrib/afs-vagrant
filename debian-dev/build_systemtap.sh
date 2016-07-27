@@ -1,3 +1,4 @@
+#!/usr/bin/env bash  # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
 EXIT_SUDO=0
 if [ ! $UID == 0 ]; then
@@ -38,6 +39,7 @@ usermod -a -G stapdev vagrant
 if [ ! -d /lib/modules/`uname -r`/kernel/fs/openafs ]; then
   mkdir -p /lib/modules/`uname -r`/kernel/fs/openafs
 fi
+echo "Copying openafs.ko kernel module to /lib/modules/`uname -r`/kernel/fs/openafs/"
 if [ -f /home/vagrant/openafs/src/libafs/MODLOAD-`uname -r`-SP/openafs.ko ]; then
   cp /home/vagrant/openafs/src/libafs/MODLOAD-`uname -r`-SP/openafs.ko /lib/modules/`uname -r`/kernel/fs/openafs/openafs.ko
   depmod -a
@@ -45,9 +47,24 @@ elif [ -f /vagrant/openafs/src/libafs/MODLOAD-`uname -r`-SP/openafs.ko ]; then
   cp /vagrant/openafs/src/libafs/MODLOAD-`uname -r`-SP/openafs.ko /lib/modules/`uname -r`/kernel/fs/openafs/openafs.ko
   depmod -a
 else
-  echo "No AFS kernel module found."
+  echo "ERROR No AFS kernel module found."
   echo " Skipping copy to /lib/modules/`uname -r`/kernel/fs/openafs and depmod -a."
 fi
+
+# TODO: the rhel rpm does this:
+# [16:00:57]  <>	108 This package provides the ${kmod_name} kernel modules built for the Linux
+# [16:00:57]  <>	109 kernel ${kname} for the %{_target_cpu} family of processors.
+# [16:00:57]  <>	110 %post          -n kmod-${kmod_name}${dashvariant}
+# [16:00:57]  <>	111 ${depmod} -aeF /boot/System.map-${kname} ${kname} > /dev/null || :
+# [16:00:57]  <>	112 %postun        -n kmod-${kmod_name}${dashvariant}
+# [16:00:57]  <>	113 ${depmod} -aF /boot/System.map-${kname} ${kname} &> /dev/null || :
+# [16:00:57]  <>	114 %files         -n kmod-${kmod_name}${dashvariant}
+# [16:00:57]  <>	115 %defattr(644,root,root,755)
+# [16:00:57]  <>	116 /lib/modules/${kname}/extra/${kmod_name}/
+# TODO: the rc script does:
+# [16:02:00]  <>	RedHat/openafs-client.init:     modprobe openafs
+
+# TODO: Patch afsutil for openafs.ko
 
 # TODO: Systemtap vim addons
 # su -l -c 'vim-addons install systemtap' vagrant

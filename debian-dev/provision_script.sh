@@ -1,3 +1,4 @@
+#!/usr/bin/env bash  # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
 MARKER_FILE="/usr/local/etc/vagrant_provision_marker"
 # Only provision once
@@ -81,6 +82,7 @@ EOF
 chown vagrant:vagrant /home/vagrant/.inputrc
 
 # Spruce up the bash homestead
+# diff -u /etc/skel/.bashrc /home/vagrant/.bashrc
 cd /home/vagrant
 patch <<"EOF"
 --- /etc/skel/.bashrc	2014-11-12 23:08:49.000000000 +0000

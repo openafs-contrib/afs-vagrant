@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash  # vim: set ai ts=2 sts=2 sw=2 et :
 #
 # Two pathways: 1) an official release OR 2) a linux git repo with branch/tag
 
@@ -109,6 +109,7 @@ scp ../linux-headers-`make kernelversion`_1_amd64.deb \
 ### CL GUEST Method
 
 # VV=5.1.2
+# V3=4.4.15
 VV=$(curl http://download.virtualbox.org/virtualbox/LATEST.TXT)
 if [ ! -f VBoxGuestAdditions_${VV}.iso ]; then
   wget http://download.virtualbox.org/virtualbox/${VV}/VBoxGuestAdditions_${VV}.iso
