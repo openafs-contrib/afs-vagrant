@@ -69,6 +69,67 @@ cat <<EOF > /home/vagrant/.inputrc
 "\e[B":history-search-forward
 EOF
 chown vagrant:vagrant /home/vagrant/.inputrc
+
+# Spruce up the bash homestead
+cd /home/vagrant
+patch <<"EOF"
+--- /etc/skel/.bashrc	2014-11-12 23:08:49.000000000 +0000
++++ /home/vagrant/.bashrc	2016-07-26 21:14:43.431739303 +0000
+@@ -25,10 +25,10 @@
+
+ # If set, the pattern "**" used in a pathname expansion context will
+ # match all files and zero or more directories and subdirectories.
+-#shopt -s globstar
++shopt -s globstar
+
+ # make less more friendly for non-text input files, see lesspipe(1)
+-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
++[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+ # set variable identifying the chroot you work in (used in the prompt below)
+ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+@@ -43,7 +43,7 @@
+ # uncomment for a colored prompt, if the terminal has the capability; turned
+ # off by default to not distract the user: the focus in a terminal window
+ # should be on the output of commands, not on the prompt
+-#force_color_prompt=yes
++force_color_prompt=yes
+
+ if [ -n "$force_color_prompt" ]; then
+     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+@@ -76,21 +76,21 @@
+ if [ -x /usr/bin/dircolors ]; then
+     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+     alias ls='ls --color=auto'
+-    #alias dir='dir --color=auto'
+-    #alias vdir='vdir --color=auto'
++    alias dir='dir --color=auto'
++    alias vdir='vdir --color=auto'
+
+-    #alias grep='grep --color=auto'
+-    #alias fgrep='fgrep --color=auto'
+-    #alias egrep='egrep --color=auto'
++    alias grep='grep --color=auto'
++    alias fgrep='fgrep --color=auto'
++    alias egrep='egrep --color=auto'
+ fi
+
+ # colored GCC warnings and errors
+-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
++export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+ # some more ls aliases
+-#alias ll='ls -l'
+-#alias la='ls -A'
+-#alias l='ls -CF'
++alias ll='ls -l'
++alias la='ls -A'
++alias l='ls -CF'
+
+ # Alias definitions.
+ # You may want to put all your additions into a separate file like
+EOF
+
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
@@ -80,6 +141,7 @@ su -l -c 'pip install robotframework;cd ~/openafs-robotest;./install.sh' vagrant
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
 grep -q "cd /vagrant" /home/vagrant/.bash_profile || su -l -c 'echo "cd /vagrant" >> /home/vagrant/.bash_profile' vagrant
+grep -q ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> /home/vagrant/.bash_profile' vagrant
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
