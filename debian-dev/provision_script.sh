@@ -9,6 +9,9 @@ fi
 #usermod -a -G rvm vagrant
 
 # Get rid of the /boot partition, we need the space.
+if [ -d /boot ] && [ -d /boot-tmp ]; then
+  rm -rf /boot-tmp
+fi
 cp -a /boot /boot-tmp
 if [ $? -eq 0 ]; then
   echo "Merging /boot partition with /"
@@ -18,7 +21,8 @@ if [ $? -eq 0 ]; then
   if [ ! -f /etc/fstab.bkup ]; then
     cp /etc/fstab /etc/fstab.bkup
   fi
-  grep -r "/boot" /etc/fstab.bkup >! /etc/fstab
+  rm /etc/fstab
+  grep -v "/boot" /etc/fstab.bkup > /etc/fstab
   update-grub
 else
   echo "/boot and /boot-tmp are different. Aborted the merge of /boot to /."
