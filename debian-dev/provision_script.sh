@@ -27,10 +27,10 @@ for package in git-core build-essential libncurses5-dev fakeroot python-pip \
   apt-get install -y $package
 done
 apt-get install -y kernel-package --no-install-recommends
-# apt-get remove -y kernel-package fakeroot
 
 # TODO: Systemtap vim addons needs systemtap first.
 # su -l -c 'vim-addons install systemtap' vagrant
+# vim addons: http://vam.mawercer.de/
 yes | pip install robotframework
 
 # interactive selection of kernel conf file and kernel-package prevents touch-free install
