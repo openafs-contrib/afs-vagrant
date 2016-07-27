@@ -147,9 +147,10 @@ su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -s /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
 
-echo "You are almost there. Do this next: "
+echo "You are almost there! Do this next: "
 echo "vagrant ssh"
-echo "NOTE: /vagrant on the guest vm is shared with your current directory"
+echo "tmux -CC"
+echo "NOTE: /vagrant on the guest vm is shared with your current directory. tmux is more fun in iTerm2. =)"
 
 #5.3 gb
 # Touch the marker file so we don't do this again
