@@ -15,6 +15,19 @@ Pin: release *
 Pin-Priority: -1
 EOF
 
+# Live on the edge of the apt-get tree
+cat <<"EOF" > /etc/apt/sources.list
+###### Debian Main Repos
+deb http://ftp.us.debian.org/debian/ sid main contrib non-free
+deb-src http://ftp.us.debian.org/debian/ sid main contrib non-free
+
+###### Debian Update Repos
+deb http://security.debian.org/ sid/updates main contrib non-free
+deb http://ftp.us.debian.org/debian/ sid-proposed-updates main contrib non-free
+deb-src http://security.debian.org/ sid/updates main contrib non-free
+deb-src http://ftp.us.debian.org/debian/ sid-proposed-updates main contrib non-free
+EOF
+
 # Update apt
 apt-get update
 
