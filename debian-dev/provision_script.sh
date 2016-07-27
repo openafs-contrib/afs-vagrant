@@ -64,7 +64,7 @@ cat <<EOF > ${DEBIAN_INIT}
 cd /tmp
 grep -v `hostname` /etc/hosts > tmp
 rm /etc/hosts
-echo `hostname -I` `hostname`.local `hostname` | cat - tmp > /etc/hosts
+echo `hostname -I | awk '{ print $1 }'` `hostname`.local `hostname` | cat - tmp > /etc/hosts
 rm tmp
 EOF
 chmod +x ${DEBIAN_INIT}
