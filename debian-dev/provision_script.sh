@@ -179,7 +179,7 @@ if [ ! -f aklog-1.6.18 ]; then
   wget http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
 fi
 if [ ! -f /usr/bin/aklog-1.6.18 ]; then
-  cp aklog-1.6.18 /usr/bin/aklog-1.6.18
+  cp /vagrant/aklog-1.6.18 /usr/bin/aklog-1.6.18
   chmod a+x /usr/bin/aklog-1.6.18
 fi
 
