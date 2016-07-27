@@ -12,7 +12,7 @@ apt-get update
 
 # Install dependencies, Git, and stuff
 # First, blacklist some of the heavy packages
-cat > /etc/apt/preferences.d/01texlive-exclude << EOF
+cat <<EOF > /etc/apt/preferences.d/01texlive-exclude
 Package: texlive*
 Pin: release *
 Pin-Priority: -1
