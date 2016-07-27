@@ -26,7 +26,7 @@ fi
 
 # Install dependencies, Git, and stuff
 # First, blacklist some of the heavy packages
-cat <<EOF > /etc/apt/preferences.d/01texlive-exclude
+cat <<"EOF" > /etc/apt/preferences.d/01texlive-exclude
 Package: texlive*
 Pin: release *
 Pin-Priority: -1
@@ -162,7 +162,7 @@ patch <<"EOF"
 EOF
 
 # Vim setup
-cat <<EOF > /home/vagrant/.vimrc
+cat <<"EOF" > /home/vagrant/.vimrc
 set nocompatible
 syntax on
 source /home/vagrant/.vim/cscope_maps.vim
@@ -176,7 +176,7 @@ fi
 cd /home/vagrant/.vim
 wget http://cscope.sourceforge.net/cscope_maps.vim
 
-cat <<EOF > /home/vagrant/.lessfilter
+cat <<"EOF" > /home/vagrant/.lessfilter
 #!/bin/bash
 
 # paraiso-dark native vim
