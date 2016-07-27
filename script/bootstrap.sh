@@ -8,6 +8,9 @@ git clone https://github.com/openafs-contrib/afs-vagrant.git
 
 if [ -d "afs-vagrant/$1" ]; then
   cd "afs-vagrant/$1"
+  if [ ! -f aklog-1.6.18 ]; then
+    cp ../debian-server/aklog-1.6.18 ./aklog-1.6.18
+  fi
 else
   echo "${bold}Bad directory${normal}. Try again with "
   echo "${bold}./afs-vagrant/scripts/bootstrap.sh <box foldername>${normal}"
