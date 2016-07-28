@@ -56,8 +56,8 @@ apt-get update
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
-    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex linux-headers-`uname -r` \
-    strace elfutils cscope \
+    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
+    strace elfutils cscope systemtap systemtap-doc systemtap-sdt-dev \
     vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
   echo "apt-get install -y $package"
   apt-get install -y $package
