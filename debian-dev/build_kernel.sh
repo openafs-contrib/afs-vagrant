@@ -16,7 +16,7 @@ linux-image-${V3}-dbg_1_amd64.deb"
 i=0
 for deb in ${deb_packages}; do
   if [ ! -f ${deb} ]; then
-    wget http://download.sinenomine.net/user/jgorse/debian8x64/${deb}
+    wget http://download.sinenomine.net/user/jgorse/debian8x64/${V3}/${deb}
     if [ $? -ne 0 ]; then
       echo "No archived kernel, time to build."
       break
@@ -82,7 +82,7 @@ sudo V3=${V3} dpkg -i ../linux-headers-${V3}_1_amd64.deb \
 scp ../linux-headers-${V3}_1_amd64.deb \
   ../linux-image-${V3}_1_amd64.deb \
   ../linux-image-${V3}-dbg_1_amd64.deb \
-  jgorse@sftp.sinenomine.net:/afs/sinenomine.net/user/jgorse/public/debian8x64/
+  jgorse@sftp.sinenomine.net:/afs/sinenomine.net/user/jgorse/public/debian8x64/${V3}/
 
 # We now have the following packages in the directory above:
 #   linux-headers-`make kernelversion`_1_amd64.deb
