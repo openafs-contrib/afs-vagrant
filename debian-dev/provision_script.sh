@@ -59,17 +59,24 @@ apt-get update
 
 # This seems like a good place to install the binary kernel
 # TODO: build_kernel.sh $version
+echo "Installing the specified kernel"
 su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
 su -l -c 'bash /vagrant/build_kernel.sh' vagrant
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
-for package in git-core build-essential libncurses5-dev fakeroot python-pip \
+# for package in git-core build-essential libncurses5-dev fakeroot python-pip \
+#     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
+#     strace elfutils cscope systemtap systemtap-doc systemtap-sdt-dev \
+#     vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
+#   echo "apt-get install -y $package"
+#   apt-get install -y $package
+# done
+echo "apt-get install -y packages"
+apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
     strace elfutils cscope systemtap systemtap-doc systemtap-sdt-dev \
-    vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
-  echo "apt-get install -y $package"
-  apt-get install -y $package
-done
+    vim tmux vim-addon-manager nfs-kernel-server   # Optional
+
 apt-get install -y kernel-package --no-install-recommends
 
 yes | pip install robotframework
