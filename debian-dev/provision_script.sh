@@ -8,7 +8,7 @@ fi
 # Add the vagrant user to the RVM group
 #usermod -a -G rvm vagrant
 
-# Get rid of the /boot partition, we need the space.
+# Get rid of the /boot partition, we need the space to grow.
 if [ -d /boot ] && [ -d /boot-tmp ]; then
   rm -rf /boot-tmp
 fi
@@ -16,9 +16,12 @@ cp -a /boot /boot-tmp
 diff -ru /boot /boot-tmp
 if [ $? -eq 0 ]; then
   echo "Merging /boot partition with /"
+  chmod -R u+w /boot
   rm -rf /boot
-  umount /boot
+  umount -f /boot
   rmdir /boot
+  blkid
+  mkfs.ext4 /dev/sda1
   mv /boot-tmp /boot
   if [ ! -f /etc/fstab.bkup ]; then
     cp /etc/fstab /etc/fstab.bkup
