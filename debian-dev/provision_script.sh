@@ -60,12 +60,12 @@ apt-get update
 # This seems like a good place to install the binary kernel
 # TODO: build_kernel.sh $version
 echo "Installing the specified kernel"
-ls -l /vagrant/*.deb
-echo "/home/vagrant/*.deb before"
-ls -l /home/vagrant/*.deb
-su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
-echo "/home/vagrant/*.deb after"
-ls -l /home/vagrant/*.deb
+ls -l /vagrant/
+echo "/home/vagrant/ before"
+ls -l /home/vagrant/
+# su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
+echo "/home/vagrant/ after"
+ls -l /home/vagrant/
 su -l -c 'bash /vagrant/build_kernel.sh' vagrant
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`

@@ -12,6 +12,11 @@ export V3=${V}     # release version, triplet
 deb_packages="linux-headers-${V3}_1_amd64.deb linux-image-${V3}_1_amd64.deb \
 linux-image-${V3}-dbg_1_amd64.deb"
 
+for deb in ${deb_packages}; do
+  if [ ! -f ${deb} ] && [ -f /vagrant/${deb} ]; then
+    ln -s /vagrant/${deb} `pwd`/${deb}
+  fi
+done
 # Counter variable for found deb packages
 i=0
 for deb in ${deb_packages}; do
