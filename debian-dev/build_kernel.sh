@@ -36,9 +36,11 @@ done
 echo "Got ${i} prebuilt packages."
 if [ $i == 3 ]; then
   # We were able to download the debian packages. Now install them and quit.
-  echo "Run the following command to complete install:"
+  echo "Runing the following command to complete install:"
   echo "  sudo dpkg -i ${deb_packages}"
   echo "  Consider: dkms --kernelsourcedir /usr/src/linux-headers-$V3"
+  dkms --kernelsourcedir /usr/src/linux-headers-$V3
+  sudo dpkg -i ${deb_packages}
   echo "All done with kernel $V3! NOTE: Check your guest kernel module."
   exit 0
 fi
