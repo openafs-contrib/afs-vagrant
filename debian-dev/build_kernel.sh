@@ -16,7 +16,7 @@ linux-image-${V3}-dbg_1_amd64.deb"
 i=0
 for deb in ${deb_packages}; do
   if [ ! -f ${deb} ]; then
-    wget http://download.sinenomine.net/user/jgorse/debian8x64/${V3}/${deb}
+    wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/${V3}/${deb}
     if [ $? -ne 0 ]; then
       echo "No archived kernel, time to build."
       break
