@@ -68,8 +68,9 @@ echo "/home/vagrant/ after"
 ls -l /home/vagrant/
 su -l -c 'bash /vagrant/build_kernel.sh' vagrant
 update-grub
+grub-install /dev/sda
 cat /boot/grub/grub.cfg | grep menuentry | grep -v recovery | tr \' '\n' | grep Debian.*[0-9]
-grep DEFAULT /etc/default/grub
+
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 # for package in git-core build-essential libncurses5-dev fakeroot python-pip \
