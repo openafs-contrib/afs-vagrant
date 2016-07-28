@@ -5,8 +5,8 @@
 cd ~/
 
 # Path 1, official tarball
-export V=4.7    # release version
-export V3=4.7.0 # release version, triplet
+export V=4.4.15    # release version
+export V3=${V}     # release version, triplet
 
 ## Before building, can we cheat? Has this been done before...
 deb_packages="linux-headers-${V3}_1_amd64.deb linux-image-${V3}_1_amd64.deb \
