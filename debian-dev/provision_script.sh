@@ -54,6 +54,11 @@ EOF
 # Update apt
 apt-get update
 
+# This seems like a good place to install the binary kernel
+# TODO: build_kernel.sh $version
+su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
+su -l -c '/vagrant/build_kernel.sh' vagrant
+
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
@@ -236,7 +241,7 @@ su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -sf /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 # su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
 #su -l -c 'cd ~/openafs;afsutil build --cf "--with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths"' vagrant
-# TODO: build_kernel.sh $version, build_openafs.sh $version...
+# TODO: build_openafs.sh $version...
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
   wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
