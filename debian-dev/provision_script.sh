@@ -1,4 +1,4 @@
-#!/usr/bin/env bash  # vim: set ai ts=2 sts=2 sw=2 et :
+# vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
 MARKER_FILE="/usr/local/etc/vagrant_provision_marker"
 # Only provision once
@@ -13,8 +13,10 @@ if [ -d /boot ] && [ -d /boot-tmp ]; then
   rm -rf /boot-tmp
 fi
 cp -a /boot /boot-tmp
+diff -ru /boot /boot-tmp
 if [ $? -eq 0 ]; then
   echo "Merging /boot partition with /"
+  rm -rf /boot
   umount /boot
   rmdir /boot
   mv /boot-tmp /boot
@@ -178,7 +180,7 @@ if [ ! -d /home/vagrant/.vim ]; then
     su -l -c 'mkdir /home/vagrant/.vim' vagrant
 fi
 cd /home/vagrant/.vim
-wget http://cscope.sourceforge.net/cscope_maps.vim
+wget --quiet http://cscope.sourceforge.net/cscope_maps.vim
 
 cat <<"EOF" > /home/vagrant/.lessfilter
 #!/bin/bash
@@ -215,7 +217,7 @@ esac
 exit 0
 EOF
 chown vagrant:vagrant /home/vagrant/.lessfilter
-cmod a+x /home/vagrant/.lessfilter
+chmod a+x /home/vagrant/.lessfilter
 
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
@@ -232,7 +234,9 @@ grep -q ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo 
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 su -l -c 'mkdir -p ~/.afsrobotestrc;ln -sf /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
-su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
+# su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
+#su -l -c 'cd ~/openafs;afsutil build --cf "--with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths"' vagrant
+# TODO: build_kernel.sh $version, build_openafs.sh $version...
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
   wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18

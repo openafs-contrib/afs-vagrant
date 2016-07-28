@@ -30,8 +30,9 @@ cd systemtap-*
 ./configure
 make -j`nproc`
 make install
-groupadd stapusr
-groupadd stapdev
+# These should not be necessary...
+# groupadd stapusr
+# groupadd stapdev
 usermod -a -G stapusr vagrant
 usermod -a -G stapdev vagrant
 

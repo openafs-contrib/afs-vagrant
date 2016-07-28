@@ -78,10 +78,14 @@ sudo V3=${V3} dpkg -i ../linux-headers-${V3}_1_amd64.deb \
   ../linux-image-${V3}_1_amd64.deb \
   ../linux-image-${V3}-dbg_1_amd64.deb
 
+sudo chmod a+r /boot/System.map-${V3}
+# update-grub
+
 ### Push .deb packages
 scp ../linux-headers-${V3}_1_amd64.deb \
   ../linux-image-${V3}_1_amd64.deb \
   ../linux-image-${V3}-dbg_1_amd64.deb \
+  /boot/vmlinux-${V3} \
   jgorse@sftp.sinenomine.net:/afs/sinenomine.net/user/jgorse/public/debian8x64/${V3}/
 
 # We now have the following packages in the directory above:
