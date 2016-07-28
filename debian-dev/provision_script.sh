@@ -60,7 +60,7 @@ apt-get update
 # This seems like a good place to install the binary kernel
 # TODO: build_kernel.sh $version
 su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
-su -l -c '/vagrant/build_kernel.sh' vagrant
+su -l -c 'bash /vagrant/build_kernel.sh' vagrant
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
 for package in git-core build-essential libncurses5-dev fakeroot python-pip \
@@ -231,7 +231,7 @@ chmod a+x /home/vagrant/.lessfilter
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
-su -l -c 'pip install robotframework;cd ~/openafs-robotest;./install.sh' vagrant
+su -l -c 'cd ~/openafs-robotest;./install.sh' vagrant
 
 # TODO: copy common files from shared host dir to guest's directory on host. do in bootstrap.sh
 
