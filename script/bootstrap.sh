@@ -21,3 +21,7 @@ fi
 
 # vagrant up
 vagrant up
+
+echo "Almost there. Do this: "
+echo " cd afs-vagrant/$1"
+echo " vagrant ssh"
