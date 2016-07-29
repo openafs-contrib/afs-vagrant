@@ -16,7 +16,7 @@ tar cfz amd64_linux26-${BUILD_ID}.tar.gz amd64_linux26
 if [ ! -d /lib/modules/`uname -r`/kernel/fs/openafs ]; then
   sudo mkdir -p /lib/modules/`uname -r`/kernel/fs/openafs
 fi
-  echo "Installing fresh built kernel module"
+echo "Installing fresh built kernel module"
 if [ -f src/libafs/MODLOAD-`uname -r`-MP/libafs.ko ]; then
   sudo cp src/libafs/MODLOAD-`uname -r`-MP/libafs.ko /lib/modules/`uname -r`/kernel/fs/openafs/libafs.ko
   sudo depmod -a
@@ -27,6 +27,18 @@ else
   echo "ERROR No AFS kernel module found."
   echo " Skipping copy to /lib/modules/`uname -r`/kernel/fs/openafs and depmod -a."
 fi
+
+afs-robotest teardown
+afs-robotest setup
+time afs-robotest run
+afs-robotest login
+/usr/afs/bin/fs sq /afs/.robotest/test 0
+
+# reload procedure
+# cd /vagrant/openafs
+# sudo afsutil reload
+# afs-robotest login
+# /usr/afs/bin/fs sq /afs/.robotest/test 0
 
 # TODO: the debian packages calls update-modules, instead of depmod directly
 # TODO: the rhel rpm does this:
@@ -43,9 +55,3 @@ fi
 # [16:02:00]  <>	RedHat/openafs-client.init:     modprobe openafs
 
 # TODO: Patch afsutil for openafs.ko
-
-afs-robotest teardown
-afs-robotest setup
-time afs-robotest run
-afs-robotest login
-/usr/afs/bin/fs sq /afs/.robotest/test 0
