@@ -218,6 +218,9 @@ lexers="+($(pygmentize -L lexers |
 case "$1" in
     $lexers)
         pygmentize -f 256 "$1";;
+    *.stp)
+        pygmentize -f 256 -l c "$1"
+        ;;
     *.bash|*.*rc)
         pygmentize -f 256 -l sh "$1"
         ;;
