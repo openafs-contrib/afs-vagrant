@@ -207,8 +207,7 @@ cd /home/vagrant/.vim
 wget --quiet http://cscope.sourceforge.net/cscope_maps.vim
 
 cat <<"EOF" > /home/vagrant/.lessfilter
-#!/bin/bash
-
+#!/usr/bin/env bash
 # paraiso-dark native vim
 pygmentize_opts="-f terminal256 -O style=native"
 shopt -s extglob
@@ -219,24 +218,26 @@ lexers="+($(pygmentize -L lexers |
 case "$1" in
     $lexers)
         pygmentize -f 256 "$1";;
-    .bashrc|.bash_aliases|.bash_environment)
+    *.bash|*.*rc)
         pygmentize -f 256 -l sh "$1"
         ;;
-    afs-robotest)
+    *afs-robotest)
         pygmentize -f 256 -l py "$1"
         ;;
 
     *)
+        #pygmentize -f 256 -l sh "$1"
         grep "#\!/bin/bash" "$1" > /dev/null
-        if [ "0" -eq "0" ]; then
+        if [ "$?" -eq "0" ]; then
             pygmentize -f 256 -l sh "$1"
         fi
         head -n1 "$1" | grep "python" > /dev/null
-        if [ "0" -eq "0" ]; then
+        if [ "$?" -eq "0" ]; then
             pygmentize -f 256 -l py "$1"
         else
             exit 1
         fi
+        ;;
 esac
 exit 0
 EOF
