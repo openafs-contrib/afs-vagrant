@@ -57,19 +57,19 @@ EOF
 # Update apt
 apt-get update
 
-# This seems like a good place to install the binary kernel
+# This seems like a good place to install the (optional) binary kernel install
 # TODO: build_kernel.sh $version
-echo "Installing the specified kernel"
-ls -l /vagrant/
-echo "/home/vagrant/ before"
-ls -l /home/vagrant/
-# su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
-echo "/home/vagrant/ after"
-ls -l /home/vagrant/
-su -l -c 'bash /vagrant/build_kernel.sh' vagrant
-update-grub
-grub-install /dev/sda
-cat /boot/grub/grub.cfg | grep menuentry | grep -v recovery | tr \' '\n' | grep Debian.*[0-9]
+# echo "Installing the specified kernel"
+# ls -l /vagrant/
+# echo "/home/vagrant/ before"
+# ls -l /home/vagrant/
+# # su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
+# echo "/home/vagrant/ after"
+# ls -l /home/vagrant/
+# su -l -c 'bash /vagrant/build_kernel.sh' vagrant
+# update-grub
+# grub-install /dev/sda
+# cat /boot/grub/grub.cfg | grep menuentry | grep -v recovery | tr \' '\n' | grep Debian.*[0-9]
 
 
 # add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
