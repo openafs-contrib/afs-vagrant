@@ -264,6 +264,10 @@ echo "`date` executing $0"
 #   3) deletes runner lock file: MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
 #   4) kexec new kernel, rebooting into run_on_boot_script.sh for testing
 
+echo "path $PATH"
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+echo "path $PATH"
+
 cd ~/
 LAST_TESTED="/home/vagrant/last_tested"
 curl http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/current/CHECKSUMS | grep -e "generic.*amd64.deb" -e "linux-headers.*all.deb" > CHECKSUMS
@@ -294,7 +298,6 @@ if [ -f "${MARKER_FILE}" ]; then
   echo "`date` removing ${MARKER_FILE} and rebooting"
   rm ${MARKER_FILE}
 fi
-sudo kexec -e
 
 sudo /sbin/shutdown -r now
 
