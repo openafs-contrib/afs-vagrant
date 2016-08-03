@@ -326,6 +326,7 @@ fi
 
 echo "`date` executing $0"
 
+. ~/.bashrc
 cd ~/openafs
 git pull
 afsutil build # install kernel headers first, see below
