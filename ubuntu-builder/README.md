@@ -9,15 +9,15 @@ Build a new kernel every night and OpenAFS against that. Run it and smoke it.
 
 1. Provision once via vagrant up => provision_script.sh
 2. Run at least Daily
-2.1 Build or acquire kernel .deb packages and latest AFS master
-2.2 Install kernel .deb packages
-2.3 Cleanup
-2.3.1 Remove kernel .deb packages > 7 days old
-2.3.2 Kernel make clean
-2.4 kexec into new kernel
-2.5 afsutil build
-2.6 afs-robotest {setup;run;teardown}
-2.7 Report status
+  1. Build or acquire kernel .deb packages and latest AFS master
+  2. Install kernel .deb packages
+  3. Cleanup
+    1. Remove kernel .deb packages > 7 days old
+    2. Kernel make clean
+  4. kexec into new kernel
+  5. afsutil build
+  6. afs-robotest {setup;run;teardown}
+  7. Report status
 
 When the smoke comes out. Patch it. (W)
 
@@ -25,6 +25,7 @@ When the smoke comes out. Patch it. (W)
 
 ## Kernel from ubuntu daily mainline
 
+```sh
 # linux-headers-4.7.0-999_4.7.0-999.201608012201_all.deb
 # TODO: Turn this into a daily crontab script that
 #   1) grabs latest CHECKSUMS file, if debs are newer than $LAST_TESTED, continue
@@ -54,17 +55,19 @@ sudo kexec -e
 # At this point we reboot into the new kernel and lose our user-state.
 
 (crontab -l 2>/dev/null; echo "@reboot /home/vagrant/run_on_boot_script.sh >> /home/vagrant/run_on_boot_script.out 2>&1") | crontab -
-
-
-Refs:
+```
+## Refs
 (1) https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
 (2) http://kernel.ubuntu.com/~kernel-ppa/mainline/
 
 ## Kernel from linux-next repo
+
+```sh
 # https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/log/?ofs=100
-
-
+```
 ## AFS
+
+```sh
 # cd /vagrant/openafs # NFS goes away after kexec
 cd ~/openafs
 afsutil build # install kernel headers first, see below
@@ -72,3 +75,4 @@ sudo afsutil install --force
 afs-robotest setup
 afs-robotest run
 afs-robotest teardown
+```
