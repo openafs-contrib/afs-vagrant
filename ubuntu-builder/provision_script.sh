@@ -335,7 +335,6 @@ echo "path $PATH"
 cd ~/openafs
 git pull
 afsutil build # install kernel headers first, see below
-sudo afsutil install --force
 afs-robotest setup
 afs-robotest run
 # afs-robotest teardown
