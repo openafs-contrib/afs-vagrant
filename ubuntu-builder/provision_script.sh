@@ -55,46 +55,9 @@ Owners: kexec-tools
 Flags: seen
 EOF
 
-# Live on the edge of the apt-get tree
-#Probably not a good idea in ubuntu
-# cat <<"EOF" > /etc/apt/sources.list
-# ###### Debian Main Repos
-# deb http://ftp.us.debian.org/debian/ sid main contrib non-free
-# deb-src http://ftp.us.debian.org/debian/ sid main contrib non-free
-#
-# ###### Debian Update Repos
-# deb http://security.debian.org/ sid/updates main contrib non-free
-# deb http://ftp.us.debian.org/debian/ sid-proposed-updates main contrib non-free
-# deb-src http://security.debian.org/ sid/updates main contrib non-free
-# deb-src http://ftp.us.debian.org/debian/ sid-proposed-updates main contrib non-free
-# EOF
-
 # Update apt
 apt-get update
 
-# This seems like a good place to install the (optional) binary kernel install
-# TODO: build_kernel.sh $version
-# echo "Installing the specified kernel"
-# ls -l /vagrant/
-# echo "/home/vagrant/ before"
-# ls -l /home/vagrant/
-# # su -l -c 'ln -s /vagrant/*.deb /home/vagrant/' vagrant
-# echo "/home/vagrant/ after"
-# ls -l /home/vagrant/
-# su -l -c 'bash /vagrant/build_kernel.sh' vagrant
-# update-grub
-# grub-install /dev/sda
-# cat /boot/grub/grub.cfg | grep menuentry | grep -v recovery | tr \' '\n' | grep Debian.*[0-9]
-
-
-# add for bootstrapping server, maybe: linux-headers-3.16.0-4-amd64 OR linux-headers-`uname -r`
-# for package in git-core build-essential libncurses5-dev fakeroot python-pip \
-#     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
-#     strace elfutils cscope systemtap systemtap-doc systemtap-sdt-dev \
-#     vim tmux vim-addon-manager nfs-kernel-server; do   # Optional
-#   echo "apt-get install -y $package"
-#   apt-get install -y $package
-# done
 echo "apt-get install -y packages"
 apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip kexec-tools \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
@@ -105,7 +68,6 @@ apt-get install -y kernel-package --no-install-recommends
 pip install --upgrade pip
 yes | pip install robotframework
 
-# interactive selection of kernel conf file and kernel-package prevents touch-free install
 for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64; do
   echo "apt-get build-dep -y $package"
   apt-get build-dep -y $package
@@ -268,8 +230,6 @@ su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
 su -l -c 'cd ~/openafs-robotest;./install.sh' vagrant
 
-# TODO: copy common files from shared host dir to guest's directory on host. do in bootstrap.sh
-
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
 grep -s "cd /vagrant" /home/vagrant/.bash_profile || su -l -c 'echo "cd /vagrant" >> /home/vagrant/.bash_profile' vagrant
@@ -358,7 +318,7 @@ cat <<"EOF" > /home/vagrant/run_on_boot_script.sh
 # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
 LAST_TESTED="/home/vagrant/last_tested"
-MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
+MARKER_FILE="/home/vagrant/run_on_boot_script.marker"
 # Only run tests once
 if [ -f "${MARKER_FILE}" ]; then
   echo "`date` already ran $0. exiting."
@@ -396,6 +356,5 @@ echo "vagrant ssh"
 echo "tmux -CC"
 echo "NOTE: /vagrant on the guest vm is shared with your current directory. tmux is more fun in iTerm2. =)"
 
-#5.3 gb
 # Touch the marker file so we don't do this again
 touch ${MARKER_FILE}
