@@ -326,6 +326,9 @@ fi
 
 echo "`date` executing $0"
 
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+echo "path $PATH"
+
 . ~/.bashrc
 cd ~/openafs
 git pull
