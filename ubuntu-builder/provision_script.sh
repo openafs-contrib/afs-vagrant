@@ -236,10 +236,8 @@ grep -s "cd /vagrant" /home/vagrant/.bash_profile || su -l -c 'echo "cd /vagrant
 grep -s ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> /home/vagrant/.bash_profile' vagrant
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
-su -l -c 'mkdir -p ~/.afsrobotestrc;ln -sf /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
-# su -l -c 'cd ~/openafs;./regen.sh;./configure --with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths --with-linux-kernel-packaging' vagrant
-#su -l -c 'cd ~/openafs;afsutil build --cf "--with-krb5 --disable-strip-binaries --enable-debug --disable-optimize --enable-debug-kernel --disable-optimize-kernel --enable-debug-lwp --without-dot --enable-checking --enable-transarc-paths"' vagrant
-# TODO: build_openafs.sh $version...
+su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
+
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
   wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
