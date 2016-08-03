@@ -232,7 +232,6 @@ su -l -c 'cd ~/openafs-robotest;./install.sh' vagrant
 
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
-grep -s "cd /vagrant" /home/vagrant/.bash_profile || su -l -c 'echo "cd /vagrant" >> /home/vagrant/.bash_profile' vagrant
 grep -s ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> /home/vagrant/.bash_profile' vagrant
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
