@@ -29,6 +29,7 @@ if [ $? -eq 0 ]; then
   rm /etc/fstab
   grep -v "/boot" /etc/fstab.bkup > /etc/fstab
   update-grub
+  grub-install /dev/sda
 else
   echo "/boot and /boot-tmp are different. Aborted the merge of /boot to /."
 fi
@@ -273,6 +274,7 @@ if [ ! -f /usr/bin/aklog-1.6.18 ]; then
   cp /vagrant/aklog-1.6.18 /usr/bin/aklog-1.6.18
   chmod a+x /usr/bin/aklog-1.6.18
 fi
+chmod a+x /vagrant/*.sh
 
 echo "You are almost there! Do this next: "
 echo "vagrant ssh"
