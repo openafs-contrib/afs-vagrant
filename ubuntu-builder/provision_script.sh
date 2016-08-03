@@ -289,7 +289,14 @@ done
 shasum -c CHECKSUMS
 sudo dpkg -i $debs
 
-sudo shutdown -r now
+MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
+if [ -f "${MARKER_FILE}" ]; then
+  echo "`date` removing ${MARKER_FILE} and rebooting"
+  rm ${MARKER_FILE}
+fi
+sudo kexec -e
+
+sudo /sbin/shutdown -r now
 
 # get 4.7.0-999-generic from linux-image-4.7.0-999-generic_4.7.0-999.201608012201_amd64.deb
 
@@ -298,12 +305,6 @@ sudo shutdown -r now
 # echo "kexec -l /boot/vmlinuz-${new_uname} --append=${kappend} --initrd=/boot/initrd.img-${new_uname}"
 # sudo kexec -l /boot/vmlinuz-${new_uname} --append=${kappend} --initrd=/boot/initrd.img-${new_uname}
 #
-# MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
-# if [ -f "${MARKER_FILE}" ]; then
-#   echo "`date` removing ${MARKER_FILE} and rebooting"
-#   rm ${MARKER_FILE}
-# fi
-# sudo kexec -e
 
 # Goodbye world =)
 EOF
