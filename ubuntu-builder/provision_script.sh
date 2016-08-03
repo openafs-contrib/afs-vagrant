@@ -291,17 +291,81 @@ fi
 chmod a+x /vagrant/*.sh
 
 
+# Update kernel, clear testing flag if we do update it
+cat <<"EOF" > /home/vagrant/run_periodic-mainline.sh
+# vim: set ai ts=2 sts=2 sw=2 et :
+export DEBIAN_FRONTEND=noninteractive
+echo "`date` executing $0"
+
+## Kernel from ubuntu daily mainline
+
+# linux-headers-4.7.0-999_4.7.0-999.201608012201_all.deb
+# TODO: Turn this into a daily crontab script that
+#   1) grabs latest CHECKSUMS file, if debs are newer than $LAST_TESTED, continue
+#   2) installs latest debs
+#   3) deletes runner lock file: MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
+#   4) kexec new kernel, rebooting into run_on_boot_script.sh for testing
+
+cd ~/
+LAST_TESTED="/home/vagrant/last_tested"
+curl http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/current/CHECKSUMS | grep -e "generic.*amd64.deb" -e "linux-headers.*all.deb" > CHECKSUMS
+debs=$(cat CHECKSUMS | head -3 | awk '{ print $2}' | tr '\n' ' ')
+latest=$(head -1 CHECKSUMS | perl -pe "s/.*\.(.*)_all.deb/\1/")
+# Only do this if we have not done it before
+if [ -f "${LAST_TESTED}" ]; then
+  echo "`date` checking ${LAST_TESTED}"
+  if [[ $(cat ${LAST_TESTED}) == ${latest} ]]; then
+    echo "Latest kernel debs match last tested. Exiting."
+    # exit 0
+  else
+    echo "LAST_TESTED $(cat ${LAST_TESTED})=>${latest}"
+  fi
+fi
+
+for package in $debs; do
+  if [ ! -f $package ]; then
+    wget --quiet http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/current/$package
+  fi
+done
+#  check checksums
+shasum -c CHECKSUMS
+sudo dpkg -i $debs
+
+sudo shutdown -r now
+
+# get 4.7.0-999-generic from linux-image-4.7.0-999-generic_4.7.0-999.201608012201_amd64.deb
+
+# new_uname=$(grep image CHECKSUMS | head -1 | awk '{print $2}' | perl -pe "s/linux-image-(.*?)_.*/\1/")
+# kappend=\"$(perl -pe "s/=\/vmlinuz-.*?[[:space:]]/=\/boot\/vmlinuz-${new_uname} /" /proc/cmdline)\"
+# echo "kexec -l /boot/vmlinuz-${new_uname} --append=${kappend} --initrd=/boot/initrd.img-${new_uname}"
+# sudo kexec -l /boot/vmlinuz-${new_uname} --append=${kappend} --initrd=/boot/initrd.img-${new_uname}
+#
+# MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
+# if [ -f "${MARKER_FILE}" ]; then
+#   echo "`date` removing ${MARKER_FILE} and rebooting"
+#   rm ${MARKER_FILE}
+# fi
+# sudo kexec -e
+
+# Goodbye world =)
+EOF
+chmod a+x /home/vagrant/run_periodic-mainline.sh
+chown vagrant:vagrant /home/vagrant/run_periodic-mainline.sh
+su -l -c '(crontab -l 2>/dev/null; echo "0 23 * * *  /home/vagrant/run_periodic-mainline.sh >> /home/vagrant/run_periodic-mainline.log 2>&1") | crontab -' vagrant
+
+
 cat <<"EOF" > /home/vagrant/run_on_boot_script.sh
 # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
+LAST_TESTED="/home/vagrant/last_tested"
 MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
-# Only provision once
+# Only run tests once
 if [ -f "${MARKER_FILE}" ]; then
   echo "`date` already ran $0. exiting."
   exit 0
 fi
 
-echo "`date` executing run_on_boot_script"
+echo "`date` executing $0"
 
 cd ~/openafs
 git pull
@@ -312,16 +376,20 @@ afs-robotest run
 # afs-robotest teardown
 
 # TODO: Report back to mothership with 'run' output
-# TODO: Set $LAST_TESTED for the kernel get script
+# Set $LAST_TESTED for the kernel get script
+echo `uname -v | perl -pe "s/#(.*?) .*/\1/"` > ${LAST_TESTED}
 
 # Touch the marker file so we don't do this again
 touch ${MARKER_FILE}
 EOF
 chmod a+x /home/vagrant/run_on_boot_script.sh
 chown vagrant:vagrant /home/vagrant/run_on_boot_script.sh
-su -l -c 'cd /vagrant;ln -s ~/run_on_boot_script.sh' vagrant
+# su -l -c 'cd /vagrant;ln -s ~/run_on_boot_script.sh' vagrant
 su -l -c '(crontab -l 2>/dev/null; echo "@reboot /home/vagrant/run_on_boot_script.sh >> /home/vagrant/run_on_boot_script.log 2>&1") | crontab -' vagrant
-su -l -c 'touch /home/vagrant/run_on_boot_script.out; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
+# su -l -c 'touch /home/vagrant/run_on_boot_script.log; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
+
+echo "Updating kernel. May reboot."
+su -l -c '/home/vagrant/run_periodic-mainline.sh' vagrant
 
 echo "You are almost there! Do this next: "
 echo "vagrant ssh"
