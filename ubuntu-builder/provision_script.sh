@@ -345,7 +345,8 @@ EOF
 chmod a+x /home/vagrant/run_on_boot_script.sh
 chown vagrant:vagrant /home/vagrant/run_on_boot_script.sh
 # su -l -c 'cd /vagrant;ln -s ~/run_on_boot_script.sh' vagrant
-su -l -c '(crontab -l 2>/dev/null; echo "@reboot /home/vagrant/run_on_boot_script.sh >> /home/vagrant/run_on_boot_script.log 2>&1") | crontab -' vagrant
+# This actually needs to run after network comes up. systemd horror show: http://unix.stackexchange.com/questions/188042/running-a-script-during-booting-startup-init-d-vs-cron-reboot?answertab=votes#tab-top
+su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_on_boot_script.sh >> /home/vagrant/run_on_boot_script.log 2>&1") | crontab -' vagrant
 # su -l -c 'touch /home/vagrant/run_on_boot_script.log; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
 
 echo "Updating kernel. May reboot."
