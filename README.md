@@ -23,6 +23,7 @@ A collection of AFS development containers.
 ```
 # Xcode or command line developer tools, some gui interaction
 xcode-select --install
+# Or use this if you need the command line tools: https://github.com/rtrouton/rtrouton_scripts/tree/master/rtrouton_scripts/install_xcode_command_line_tools
 
 # homebrew & casks
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
