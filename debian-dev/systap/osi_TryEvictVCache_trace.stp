@@ -1,0 +1,54 @@
+// get inode from: stat -c %i /afs/.robotest/test/g
+global inode_i = 393219
+
+// stap -k -v osi_TryEvictVCache_trace.stp stap -d /lib/x86_64-linux-gnu/libc-2.23.so stap -d /lib/x86_64-linux-gnu/libpthread-2.23.so stap -d /lib/systemd/systemd-udevd stap -d /usr/bin/git stap -d /bin/bash stap -d /lib/x86_64-linux-gnu/ld-2.23.so stap -d /usr/bin/wc -d kernel -g --suppress-time-limits -DMAXSTRINGLEN=10000
+
+//probe module("openafs").function("osi_TryEvictVCache")
+probe module("libafs").function("osi_TryEvictVCache")
+{
+    if ($avc->v->i_ino == inode_i) {
+        printf ("%d: %s -> %s(%d) osi_TryEvictVCache ()\n", gettimeofday_s(), thread_indent(1), execname(), pid())
+        printf ("avc->v 0x%x\nparams %s\n", &$avc->v, $$parms$$)
+        printf ("*inode 0x%x\n", &$avc->v)
+        // printf ("i_dentry 0x%x\n", &$avc->v->i_dentry->first->next)
+        // printf ("i_dentry 0x%x\n", &$avc->v->i_dentry->first)
+        // printf ("i_dentry 0x%x\n", &$avc->v->i_dentry->first->next)
+        // printf ("i_dentry 0x%x\n", &$avc->v->i_dentry->first->next->next)
+        // printf ("i_dentry 0x%x\n", &$avc->v->i_dentry->first->next->next->next)
+        // printf ("i_dentry 0x%x", &$avc->v->i_dentry->first->next->next->next->next)
+    }
+
+//module("openafs").function("osi_TryEvictVCache@/vagrant/openafs/src/libafs/MODLOAD-4.4.15-SP/osi_vcache.c:19")
+// avc={.v={.i_mode=16877, .i_opflags=2, .i_uid={.val=1}, .i_gid={.val=900}, .i_flags=0, .i_acl=0xffffffffffffffff, .i_default_acl=0xffffffffffffffff, .i_op=0xffffffffa05d5900, .i_sb=0xffff880115542800, .i_mapping=0xffff8800b7039168, .i_security=0x0, .i_ino=393219, <union>={.i_nlink=3, .__i_nlink=3}, .i_rdev=1, .i_size=2048, .i_atime={.tv_sec=1469155275, .tv_nsec=0}, .i_mtime={.tv_sec=1469155275, .tv_nsec=1}, .i_ctime={.tv_sec=1469155275, .tv_nsec=0}, .i_lock={<union>={.rlock={.raw_lock={.val={.counter=0}}}}}
+
+// 1469124903:      0 afsd(26149): -> afsd(26149) osi_TryEvictVCache ()  avc={.v={.i_mode=33188, .i_opflags=4, .i_uid={.val=1}, .i_gid={.val=900}, .i_flags=0, .i_acl=0xffffffffffffffff, .i_default_acl=0xffffffffffffffff, .i_op=0xffffffffa05d5ac0, .i_sb=0xffff8800c5228000, .i_mapping=0xffff88009d4a3d68, .i_security=0x0, .i_ino=396490, <union>={.i_nlink=1, .__i_nlink=1}, .i_rdev=1, .i_size=726, .i_atime={.tv_sec=1469124484, .tv_nsec=0}, .i_mtime={.tv_sec=1469124484, .tv_nsec=1}, .i_ctime={.tv_sec=1469124484, .tv_nsec=0}, .i_lock={<union>={.rlock={.raw_lock={.val={.counter=0}}}}}, .i_bytes=0, .i_blkbits=12, .i_blocks=2, .i_state=0, .i_mutex={.count={.counter=1}, .wait_lock={<union>={.rlock={.raw_lock={.val={.counter=0}}}}}, .wait_list={.next=0xffff88009d4a3cb0, .prev=0xffff88009d4a3cb0}, .owner=0x0, ...}, ...}, ...} slept=-131940927701460 defersleep=0
+
+  // printf("magic foo: %d\n", avc->v->inode->dentry)
+  // char * dentry->d_name->name
+}
+
+probe module("libafs").function("osi_TryEvictVCache").return
+{
+    if ($avc->v->i_ino == inode_i) {
+        printf ("%d: %s <- %s(%d) osi_TryEvictVCache () ret %s\n", gettimeofday_s(), thread_indent(-1), execname(), pid(), $$return)
+    }
+
+    // printf("kbt:\n")
+    // print_backtrace()
+ // Returning from:  0xffffffffa05ad510 : osi_TryEvictVCache+0x0/0x2f0 [openafs]
+ // Returning to  :  0xffffffffa0569e35 : afs_ShakeLooseVCaches+0x75/0x260 [openafs]
+ // 0xffffffffa05484f1 : afs_Daemon+0x231/0x570 [openafs]
+ // 0xffffffffa05b66df : afsd_thread+0x2df/0x750 [openafs]
+ // 0xffffffff8108cc8f : kthread+0xcf/0xf0 [kernel]
+ // 0xffffffff815543cf : ret_from_fork+0x3f/0x70 [kernel]
+ // 0xffffffff8108cbc0 : kthread+0x0/0xf0 [kernel] (inexact)
+    // printf("ubt:\n")
+    // print_ubacktrace()
+}
+
+probe begin {
+    printf ("%d start\n", gettimeofday_s())
+}
+probe end {
+    printf ("%d end\n", gettimeofday_s())
+}

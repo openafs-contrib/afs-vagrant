@@ -1,0 +1,39 @@
+// vim: set ai ts=2 sts=2 sw=2 et :
+
+// $ stap -v osi_dentry_trace.stp -d libafs -d /lib/x86_64-linux-gnu/libc-2.23.so -g --suppress-time-limits -DMAXSTRINGLEN=10000
+
+// get inode from: stat -c %i /afs/.robotest/test/g
+// global inode_i = 393219
+
+//   global mydname = ".robotest/test/g"
+
+/*
+kernel.function("dput@fs/dcache.c:749") $dentry:struct dentry*
+
+afs_d_invalidate
+
+d_unhashed
+==
+kernel.function("dentry_unhash@fs/namei.c:3650") $dentry:struct dentry*
+
+*/
+
+probe kernel.function("dput@fs/dcache.c:749"),
+kernel.function("dentry_unhash@fs/namei.c:3650") {
+  if ($dentry != 0 && execname() == "afsd") {
+    if (reverse_path_walk($dentry) == ".robotest/test/g") {
+      // FOUND OUR DIRECTORY
+      printf ("%d: %s -> %s d_name %s vars %s\n", gettimeofday_s(), execname(), probefunc(), reverse_path_walk($dentry), $$vars$$)
+      if ($dentry !=0 && $dentry->d_inode != 0) {
+        //@cast($dentry->d_inode->i_count,"struct inode")
+        printf ("$dentry->d_inode->i_count 0x%x\n", kernel_long ( & @cast($dentry->d_inode, "inode")->i_count) ) 
+      }
+
+      printf("kbt:\n")
+      print_backtrace()
+
+      printf("ubt:\n")
+      print_ubacktrace()
+    }
+  }
+}

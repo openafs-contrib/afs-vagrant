@@ -1,0 +1,35 @@
+// hello
+
+
+// probe vfs:dentry:afs:d_iput
+// {
+//     trace(  "d_count= ".	string($dentry->d_count),
+//             "d_flag= ".  	string($dentry->d_flag)
+//          );
+// }
+
+
+probe kernel.function ("__d_drop@fs/dcache.c:468") // $dentry:struct dentry*
+{
+    if (execname_filter(execname())) {
+        printf ("%d %s(%d) \t__d_drop@fs/dcache.c:468 (%s) d_count => %d d_flags => 0x%08x\n", gettimeofday_s(),
+         execname(), pid(), reverse_path_walk($dentry), $dentry->d_lockref->count, $dentry->d_flags)
+    }
+    // task_dentry_path(task_current(), $dentry, path->mnt)
+}
+
+probe kernel.function ("__d_drop@fs/dcache.c:468").return
+{
+    if (execname_filter(execname())) {
+        printf ("%s(%d) \t__d_drop@fs/dcache.c:468 () ret=> %s\n", execname(), pid(), $$return)
+        printf ("kbt:\n")
+        print_backtrace()
+        printf ("ubt:\n")
+        print_ubacktrace()
+    }
+}
+
+function execname_filter (name)
+{
+    return (name != "vminfo" && name != "bash" && name != "acpi")
+}

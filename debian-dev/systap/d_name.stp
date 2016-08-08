@@ -1,0 +1,10 @@
+//# d_name and path from dentry pointer
+
+global mydentry = 0xffff88008e144a98
+
+probe begin
+{
+  printf ("d_name(0x%x) => %s\n", mydentry, d_name(mydentry) )
+  printf ("reverse_path_walk(0x%x) => %s\n", mydentry, reverse_path_walk(mydentry) )
+  exit()
+}
