@@ -1,5 +1,5 @@
 export DEBIAN_FRONTEND=noninteractive
-MARKER_FILE="/usr/local/etc/vagrant_provision_marker"
+MARKER_FILE="/home/vagrant/vagrant_provision_marker"
 # Only provision once
 if [ -f "${MARKER_FILE}" ]; then
   exit 0
