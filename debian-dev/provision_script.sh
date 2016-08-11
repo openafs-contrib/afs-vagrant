@@ -3,6 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 MARKER_FILE="/usr/local/etc/vagrant_provision_marker"
 # Only provision once
 if [ -f "${MARKER_FILE}" ]; then
+  echo "Already provisioned."
   exit 0
 fi
 # Add the vagrant user to the RVM group
