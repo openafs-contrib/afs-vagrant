@@ -22,6 +22,23 @@ Vagrant.configure("2") do |config|
 
   # config.vm.provision "shell", inline: $shell
   config.vm.provision "shell", path: "provision_script.sh"
+  # ssh keys management
+  config.vm.provision "shell" do |s|
+    ssh_prv_key = ""
+    ssh_pub_key = ""
+    if File.file?('~/.ssh/openafs-gerrit')
+      ssh_prv_key = File.readlines("#{Dir.home}/.ssh/openafs-gerrit").first.strip
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/openafs-gerrit.pub").first.strip
+    elsif File.file?('~/.ssh/id_rsa')
+      ssh_prv_key = File.readlines("#{Dir.home}/.ssh/id_rsa").first.strip
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    else
+      echo "No private key found. You will need to remedy this before any push to gerrit."
+    end
+    s.inline = <<-SHELL
+      echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+      echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    SHELL
   end
 end
 
