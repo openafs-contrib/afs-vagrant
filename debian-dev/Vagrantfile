@@ -22,15 +22,6 @@ Vagrant.configure("2") do |config|
 
   # config.vm.provision "shell", inline: $shell
   config.vm.provision "shell", path: "provision_script.sh"
-
-# e.g. https://github.com/mitchellh/vagrant/blob/master/scripts/website_push_www.sh
-# push to server 1-n, client 1-m
-  config.push.define "www", strategy: "local-exec" do |push|
-    push.script = "scripts/website_push_www.sh"
-  end
-# e.g. https://github.com/mitchellh/vagrant/blob/master/scripts/website_push_docs.sh
-  config.push.define "docs", strategy: "local-exec" do |push|
-    push.script = "scripts/website_push_docs.sh"
   end
 end
 
