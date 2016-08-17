@@ -9,12 +9,14 @@ Build a new kernel every night and OpenAFS against that. Run it and smoke it.
 
 1. Provision once via vagrant up => provision_script.sh
 2. Run at least Daily
+  1. /home/vagrant/run_periodic-mainline.sh
   1. Build or acquire kernel .deb packages and latest AFS master
   2. Install kernel .deb packages
   3. Cleanup
     1. Remove kernel .deb packages > 7 days old
     2. Kernel make clean
-  4. kexec into new kernel
+  4. kexec/reboot into new kernel
+    1. /home/vagrant/run_on_boot_script.sh
   5. afsutil build
   6. afs-robotest {setup;run;teardown}
   7. Report status
