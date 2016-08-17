@@ -292,7 +292,7 @@ done
 shasum -c CHECKSUMS
 sudo dpkg -i $debs
 
-MARKER_FILE="/home/vagrant/run_on_boot_script_marker"
+MARKER_FILE="/home/vagrant/run_on_boot_script.marker"
 if [ -f "${MARKER_FILE}" ]; then
   echo "`date` removing ${MARKER_FILE} and rebooting"
   rm ${MARKER_FILE}
