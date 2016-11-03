@@ -22,8 +22,10 @@ Vagrant.configure("2") do |config|
 
   # config.vm.provision "shell", inline: $shell
   config.vm.provision "shell", path: "provision_script.sh"
-  # ssh keys management
   config.vm.provision "shell" do |s|
+    # TODO: gitconfig from host to guest
+    # grep "user" -A 2 ~/.gitconfig > /tmp/.gitconfig
+    # ssh keys management
     ssh_prv_key = ""
     ssh_pub_key = ""
     if File.file?("#{Dir.home}/.ssh/openafs-gerrit")
@@ -57,7 +59,7 @@ end
 # Use 1/divider of the available memory
 # TODO: use 1/divider or 2 GB, whichever is larger
 def get_memory_setting(host)
-  divider = 4
+  divider = 2
   if host =~ /darwin/
     mem = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / divider
   elsif host =~ /linux/
