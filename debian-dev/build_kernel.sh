@@ -73,6 +73,9 @@ cp /boot/config-`uname -r` .config
 # get options
 #  make help
 
+exit 0
+# save this for part 2
+
 ### Build .deb packages
 # TODO: Consider removing fakeroot
 sudo fakeroot make-kpkg clean
