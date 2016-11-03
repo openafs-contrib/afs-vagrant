@@ -85,7 +85,7 @@ apt-get update
 echo "apt-get install -y packages"
 apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
-    strace elfutils cscope systemtap systemtap-doc systemtap-sdt-dev gdb \
+    strace elfutils cscope gdb \
     vim tmux vim-addon-manager nfs-kernel-server   # Optional
 
 apt-get install -y kernel-package --no-install-recommends
