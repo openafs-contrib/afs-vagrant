@@ -12,6 +12,10 @@
 
 # VV=5.1.2
 # V3=4.4.15
+
+set -e
+set -x
+
 VV=$(curl http://download.virtualbox.org/virtualbox/LATEST.TXT)
 if [ ! -f VBoxGuestAdditions_${VV}.iso ]; then
   wget http://download.virtualbox.org/virtualbox/${VV}/VBoxGuestAdditions_${VV}.iso
