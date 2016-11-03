@@ -38,12 +38,12 @@ git log
 stap -v trace-close.stp stap -d /lib/x86_64-linux-gnu/libc-2.23.so stap -d /lib/x86_64-linux-gnu/libpthread-2.23.so stap -d /lib/systemd/systemd-udevd stap -d /usr/bin/git stap -d /bin/bash stap -d /lib/x86_64-linux-gnu/ld-2.23.so stap -d /usr/bin/wc kernel
 
 
-stap -v -l 'probe module("*afs*").function("*")' -d /vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/libafs.ko | grep -v kafs
+stap -v -L 'probe module("*afs*").function("*")' -d /vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/libafs.ko | grep -v kafs
 
-stap -v -l 'module("*").function("d_entry")' | head
-stap -v -l 'module("*").function("d_unhashed")' | head
+stap -v -L 'module("*").function("d_entry")' | head
+stap -v -L 'module("*").function("d_unhashed")' | head
 
-stap -v -l 'module("/vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/libafs.ko").function("*")' | head
+stap -v -L 'module("/vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/libafs.ko").function("*")' | head
 
   module("/vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/libafs.ko").function("osi_TryEvictVCache@/vagrant/openafs/src/libafs/MODLOAD-4.4.15-MP/osi_vcache.c:19")
 
