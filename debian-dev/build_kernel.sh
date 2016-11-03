@@ -2,6 +2,8 @@
 #
 # Two pathways: 1) an official release OR 2) a linux git repo with branch/tag
 
+set -x
+
 cd ~/
 
 # Path 1, official tarball
