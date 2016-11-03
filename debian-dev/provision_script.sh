@@ -197,6 +197,9 @@ EOF
 cat <<"EOF" > /home/vagrant/.vimrc
 set nocompatible
 syntax on
+set autoindent
+set smartindent
+set cindent
 source /home/vagrant/.vim/cscope_maps.vim
 autocmd BufRead,BufNewFile *.strace set filetype=strace
 EOF
