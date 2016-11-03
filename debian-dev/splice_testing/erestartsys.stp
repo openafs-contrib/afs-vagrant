@@ -1,0 +1,80 @@
+// vim: set ai ts=2 sts=2 sw=2 et :
+// stap -v erestartsys.stp -d libafs -d /lib/x86_64-linux-gnu/libc-2.23.so -d /bin/cp
+
+// probe kernel.function("splice_direct_to_actor").return {
+//   if (@defined($$return)) {
+//     printf ("%d: %s. tid %d %s", gettimeofday_s(), execname(), tid(), $$parms)
+//     printf (" ret %s %d", $$return, $return)
+//     printf ("\n")
+//
+//     printf("kbt:\n")
+//     print_backtrace()
+//
+//     printf("ubt:\n")
+//     print_ubacktrace()
+//     printf ("\n")
+//   }
+// }
+
+// bytesXferred is a returned value, hence pointer
+probe module("libafs").function("afs_linux_storeproc") {
+  if (@defined($bytesXferred)) { printf("00 %-22s bytesXferred M(0x%-8x) = %-8d \n", ppfunc(), $bytesXferred, kernel_int($bytesXferred)) }
+  // printf("00 %s : %s\n", ppfunc(), $$parms)
+}
+
+probe module("libafs").function("afs_linux_storeproc").return {
+  if (@defined($$return)) { printf("01 %-32s -> %-8d\n", ppfunc(), $return) }
+  if (@defined($bytesXferred)) { printf("02 %-22s bytesXferred M(0x%-8x) = %-8d \n", ppfunc(), $bytesXferred, kernel_int($bytesXferred)) }
+  printf("%s kbt:\n", ppfunc())
+  print_backtrace()
+  printf("%s ubt:\n", ppfunc())
+  print_ubacktrace()
+} // -512 0x...fe00 ERESTARTSYS
+
+// probe module("libafs").function("afs_linux_storeproc").callee("splice_direct_to_actor").return {}
+
+probe kernel.function("splice_direct_to_actor").return {
+  if (@defined($$return)) { printf("01 %-32s -> %-8d\n", ppfunc(), $return) }
+}
+
+probe module("libafs").function("afs_CacheStoreDCaches").return {
+  if (@defined($$return)) { printf("1  %-32s -> %-8d\n", ppfunc(), $return) }
+} // -512
+probe module("libafs").function("afs_CacheStoreVCache").return {
+  if (@defined($$return)) { printf("2  %-32s -> %-8d\n", ppfunc(), $return) }
+}
+probe module("libafs").function("afs_StoreAllSegments").return {
+  if (@defined($$return)) { printf("3  %-32s -> %-8d\n", ppfunc(), $return) }
+}
+probe module("libafs").function("afs_linux_write_end").return {
+  if (@defined($$return)) { printf("4  %-32s -> %-8d\n", ppfunc(), $return) }
+} // -4 0x..ffc EINTR  Interrupted system call
+probe module("libafs").function("afs_linux_flush").return {
+  if (@defined($$return)) { printf("5  %-32s -> %-8d\n", ppfunc(), $return) }
+} // filp_close -110 0x..ff92 ETIMEDOUT
+
+// probe kernel.function("generic_perform_write").return {
+//   if (@defined($$return)) { printf(" 6 %-32s -> %-8d\n", ppfunc(), $return) }
+// } // -4 0x..ffc EINTR  Interrupted system call
+
+// 7 is the same as 6 generic_perform_write
+// probe kernel.function("__generic_file_write_iter").return {
+//   if (@defined($$return)) { printf(" 7 %-32s -> %-8d\n", ppfunc(), $return) }
+// }
+probe kernel.function("generic_file_write_iter").return {
+  if (@defined($$return)) { printf("8  %-32s -> %-8d\n", ppfunc(), $return) }
+}
+probe module("libafs").function("afs_linux_write_iter").return {
+  if (@defined($$return)) { printf("9  %-32s -> %-8d\n", ppfunc(), $return) }
+}
+
+// probe process("/lib/x86_64-linux-gnu/libc-2.23.so").function("__write_nocancel").return {
+//   if (@defined($$return)) { printf("%s -> %d\n", ppfunc(), $return) }
+// }
+
+probe begin {
+  printf ("%d start\n", gettimeofday_s())
+}
+probe end {
+  printf ("%d end\n", gettimeofday_s())
+}

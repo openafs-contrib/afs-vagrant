@@ -1,0 +1,24 @@
+// vim: set ai ts=2 sts=2 sw=2 et :
+// stap -v inject_fault.stp -d libafs -d /lib/x86_64-linux-gnu/libc-2.23.so -d /bin/cp
+
+// probe module("libafs").function("afs_linux_storeproc").return {
+//   if (@defined($$return)) {
+//     printf("01 %-32s -> %-8d to -512\n", ppfunc(), $return)
+//     $return = -512
+//   }
+//   printf("%s kbt:\n", ppfunc())
+//   print_backtrace()
+//   printf("%s ubt:\n", ppfunc())
+//   print_ubacktrace()
+// } // -512 0x...fe00 ERESTARTSYS
+
+probe module("libafs").function("afs_linux_flush").return {
+  if (@defined($$return)) {
+    printf("01 %-32s -> %-8d to -110\n", ppfunc(), $return)
+    $return = -110
+  }
+  printf("%s kbt:\n", ppfunc())
+  print_backtrace()
+  printf("%s ubt:\n", ppfunc())
+  print_ubacktrace()
+} // -110 0x...fe00 TIMEOUT
