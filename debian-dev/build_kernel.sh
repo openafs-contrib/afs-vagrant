@@ -93,6 +93,9 @@ sudo V3=${V3} dpkg -i ../linux-headers-${V3}_1_amd64.deb \
 sudo chmod a+r /boot/System.map-${V3}
 # update-grub
 
+### Create directory
+# TODO: how can we do both these steps without interaction?
+rsh jgorse@sftp.sinenomine.net mkdir -p /afs/sinenomine.net/user/jgorse/public/debian8x64/${V3}
 ### Push .deb packages
 scp ../linux-headers-${V3}_1_amd64.deb \
   ../linux-image-${V3}_1_amd64.deb \
