@@ -228,7 +228,8 @@ chmod a+x /home/vagrant/.lessfilter
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
 su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
-su -l -c 'cd ~/openafs-robotest;./install.sh' vagrant
+su -l -c 'cd ~/openafs-robotest' vagrant
+./install.sh
 
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
