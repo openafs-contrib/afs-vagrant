@@ -236,7 +236,17 @@ su -l -c 'cd ~/openafs-robotest' vagrant
 grep -s ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> /home/vagrant/.bash_profile' vagrant
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
-su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
+# su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
+su -l -c 'afs-robotest config init' vagrant
+su -l -c 'afs-robotest config set host:$HOSTNAME installer transarc' vagrant
+su -l -c 'afs-robotest config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' vagrant
+su -l -c 'afs-robotest config set variables afs_dist transarc' vagrant
+su -l -c 'afs-robotest config set variables aklog /usr/bin/aklog-1.6.18' vagrant
+# su -l -c 'afs-robotest config set options dafileserver "-d 1 -p 128 -b 2049 -l 600 -s 600 -vc 600 -cb 1024000"' vagrant
+# disable fakestate to go faster
+# su -l -c 'afs-robotest config set options afsd '-dynroot -afsdb'
+# To include more tests
+su -l -c 'afs-robotest config set run exclude_tags todo' vagrant
 
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
@@ -337,7 +347,7 @@ cd ~/openafs
 git pull
 afsutil build # install kernel headers first, see below
 afs-robotest setup
-afs-robotest run
+afs-robotest test
 # afs-robotest teardown
 
 # TODO: Report back to mothership with 'run' output
