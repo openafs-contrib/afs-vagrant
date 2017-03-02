@@ -6,6 +6,9 @@ if [ -f "${MARKER_FILE}" ]; then
   exit 0
 fi
 
+export user=vagrant
+export home=/home/$user
+
 # Get rid of the /boot partition, we will need the space to grow.
 if [ -d /boot ] && [ -d /boot-tmp ]; then
   rm -rf /boot-tmp
@@ -80,7 +83,7 @@ rm /etc/apt/preferences.d/01texlive-exclude
 #  loopback does not work for robotest.
 # Run this on boot hereon out.
 # NOTE: Does not work for multiple IP interfaces
-DEBIAN_INIT="/etc/init.d/vagrant_init"
+DEBIAN_INIT="/etc/init.d/afs_hostname_init"
 if [ ! -f "${DEBIAN_INIT}" ]; then
 cat <<EOF > ${DEBIAN_INIT}
 #!/bin/bash
@@ -96,17 +99,17 @@ ${DEBIAN_INIT}
 fi
 
 # Fix bash history search
-cat <<"EOF" > /home/vagrant/.inputrc
+cat <<"EOF" > $home/.inputrc
 ## arrow up
 "\e[A":history-search-backward
 ## arrow down
 "\e[B":history-search-forward
 EOF
-chown vagrant:vagrant /home/vagrant/.inputrc
+chown $user:$user $home/.inputrc
 
 # Spruce up the bash homestead
 # diff -u /etc/skel/.bashrc /home/vagrant/.bashrc
-cd /home/vagrant
+cd $home
 patch <<"EOF"
 --- /etc/skel/.bashrc	2014-11-12 23:08:49.000000000 +0000
 +++ /home/vagrant/.bashrc	2016-07-27 02:18:06.428000000 +0000
@@ -169,21 +172,23 @@ patch <<"EOF"
 EOF
 
 # Vim setup
-cat <<"EOF" > /home/vagrant/.vimrc
+cat <<"EOF" > $home/.vimrc
 set nocompatible
 syntax on
-source /home/vagrant/.vim/cscope_maps.vim
+source $HOME/.vim/cscope_maps.vim
 autocmd BufRead,BufNewFile *.strace set filetype=strace
 EOF
-chown vagrant:vagrant /home/vagrant/.vimrc
-if [ ! -d /home/vagrant/.vim ]; then
-    echo No ~/vim dir. Making it...
-    su -l -c 'mkdir /home/vagrant/.vim' vagrant
+chown $user:$user $home/.vimrc
+cd $home
+if [ ! -d $home/.vim ]; then
+    echo No ~/.vim dir. Making it...
+    su -l -c 'mkdir .vim' $user
 fi
-cd /home/vagrant/.vim
+cd $home/.vim
 wget --quiet http://cscope.sourceforge.net/cscope_maps.vim
 
-cat <<"EOF" > /home/vagrant/.lessfilter
+cd $home
+cat <<"EOF" > $home/.lessfilter
 #!/usr/bin/env bash
 # paraiso-dark native vim
 pygmentize_opts="-f terminal256 -O style=native"
@@ -221,46 +226,49 @@ case "$1" in
 esac
 exit 0
 EOF
-chown vagrant:vagrant /home/vagrant/.lessfilter
-chmod a+x /home/vagrant/.lessfilter
+chown $user:$user $home/.lessfilter
+chmod a+x $home/.lessfilter
 
 # Get our repos
 # su -l -c 'cd ~/;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' vagrant
-su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' vagrant
-su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' vagrant
-su -l -c 'cd ~/openafs-robotest' vagrant
+su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' $user
+su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' $user
+# su -l -c 'cd ~/openafs-robotest' $user
+cd $home/openafs-robotest
 ./install.sh
+pip install --upgrade pip
 
+cd $home
 # Automatically move into the shared folder, but only add the command
 # if it's not already there.
-grep -s ". /home/vagrant/.bashrc" /home/vagrant/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> /home/vagrant/.bash_profile' vagrant
-su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' vagrant
+grep -s ". /home/vagrant/.bashrc" $home/.bash_profile || su -l -c 'echo ". /home/vagrant/.bashrc" >> ~/.bash_profile' $user
+su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' $user
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 # su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
-su -l -c 'afs-robotest config init' vagrant
-su -l -c 'afs-robotest config set host:$HOSTNAME installer transarc' vagrant
-su -l -c 'afs-robotest config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' vagrant
-su -l -c 'afs-robotest config set variables afs_dist transarc' vagrant
-su -l -c 'afs-robotest config set variables aklog /usr/bin/aklog-1.6.18' vagrant
+su -l -c 'afs-robotest config init' $user
+su -l -c 'afs-robotest config set host:$HOSTNAME installer transarc' $user
+su -l -c 'afs-robotest config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' $user
+su -l -c 'afs-robotest config set variables afs_dist transarc' $user
+su -l -c 'afs-robotest config set variables aklog /usr/bin/aklog-1.6.18' $user
 # su -l -c 'afs-robotest config set options dafileserver "-d 1 -p 128 -b 2049 -l 600 -s 600 -vc 600 -cb 1024000"' vagrant
 # disable fakestate to go faster
 # su -l -c 'afs-robotest config set options afsd '-dynroot -afsdb'
 # To include more tests
-su -l -c 'afs-robotest config set run exclude_tags todo' vagrant
+su -l -c 'afs-robotest config set run exclude_tags todo' $user
 
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
   wget --quiet http://download.sinenomine.net/user/jgorse/debian8x64/aklog-1.6.18
 fi
 if [ ! -f /usr/bin/aklog-1.6.18 ]; then
-  cp /vagrant/aklog-1.6.18 /usr/bin/aklog-1.6.18
+  cp aklog-1.6.18 /usr/bin/aklog-1.6.18
   chmod a+x /usr/bin/aklog-1.6.18
 fi
 chmod a+x /vagrant/*.sh
 
 
 # Update kernel, clear testing flag if we do update it
-cat <<"EOF" > /home/vagrant/run_periodic-mainline.sh
+cat <<"EOF" > $home/run_periodic-mainline.sh
 # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
 echo "`date` executing $0"
@@ -321,16 +329,16 @@ sudo /sbin/shutdown -r now
 
 # Goodbye world =)
 EOF
-chmod a+x /home/vagrant/run_periodic-mainline.sh
-chown vagrant:vagrant /home/vagrant/run_periodic-mainline.sh
-su -l -c '(crontab -l 2>/dev/null; echo "0 23 * * *  /home/vagrant/run_periodic-mainline.sh >> /home/vagrant/run_periodic-mainline.log 2>&1") | crontab -' vagrant
+chmod a+x $home/run_periodic-mainline.sh
+chown $user:$user $home/run_periodic-mainline.sh
+su -l -c '(crontab -l 2>/dev/null; echo "0 23 * * *  ~/run_periodic-mainline.sh >> ~/run_periodic-mainline.log 2>&1") | crontab -' $user
 
 
-cat <<"EOF" > /home/vagrant/run_on_boot_script.sh
+cat <<"EOF" > $home/run_on_boot_script.sh
 # vim: set ai ts=2 sts=2 sw=2 et :
 export DEBIAN_FRONTEND=noninteractive
-LAST_TESTED="/home/vagrant/last_tested"
-MARKER_FILE="/home/vagrant/run_on_boot_script.marker"
+LAST_TESTED="~/last_tested"
+MARKER_FILE="~/run_on_boot_script.marker"
 # Only run tests once
 if [ -f "${MARKER_FILE}" ]; then
   echo "`date` already ran $0. exiting."
@@ -357,15 +365,15 @@ echo `uname -v | perl -pe "s/#(.*?) .*/\1/"` > ${LAST_TESTED}
 # Touch the marker file so we don't do this again
 touch ${MARKER_FILE}
 EOF
-chmod a+x /home/vagrant/run_on_boot_script.sh
-chown vagrant:vagrant /home/vagrant/run_on_boot_script.sh
+chmod a+x $home/run_on_boot_script.sh
+chown $user:$user $home/run_on_boot_script.sh
 # su -l -c 'cd /vagrant;ln -s ~/run_on_boot_script.sh' vagrant
 # This actually needs to run after network comes up. systemd horror show: http://unix.stackexchange.com/questions/188042/running-a-script-during-booting-startup-init-d-vs-cron-reboot?answertab=votes#tab-top
-su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_on_boot_script.sh >> /home/vagrant/run_on_boot_script.log 2>&1") | crontab -' vagrant
+su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_on_boot_script.sh >> ~/run_on_boot_script.log 2>&1") | crontab -' $user
 # su -l -c 'touch /home/vagrant/run_on_boot_script.log; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
 
 echo "Updating kernel. May reboot."
-su -l -c '/home/vagrant/run_periodic-mainline.sh' vagrant
+su -l -c '~/run_periodic-mainline.sh' $user
 
 echo "You are almost there! Do this next: "
 echo "vagrant ssh"
