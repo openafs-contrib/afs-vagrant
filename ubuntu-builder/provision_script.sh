@@ -353,6 +353,9 @@ echo "path $PATH"
 . ~/.bashrc
 cd ~/openafs
 git pull
+make distclean
+git clean -fxd
+./regen.sh
 afsutil build # install kernel headers first, see below
 afs-robotest setup
 afs-robotest test
