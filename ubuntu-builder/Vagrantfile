@@ -5,18 +5,20 @@
 
 Vagrant.configure("2") do |config|
 #  config.vm.box = "hashicorp/precise64"
-  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "peru/ubuntu-desktop-amd64"
+#  config.vm.box = "bento/ubuntu-16.04"
   config.vm.hostname = "openafs-ubuntu-builder"
   # config.vm.network "private_network", type: "dhcp"
  config.vm.synced_folder ".", "/vagrant" # without nfs
   # config.vm.synced_folder ".", "/vagrant", type: "nfs"
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
-  ["vmware_fusion", "vmware_workstation", "virtualbox"].each do |provider|
+  ["vmware_fusion", "vmware_workstation", "virtualbox", "libvirt", "kvm"].each do |provider|
     config.vm.provider provider do |v, override|
       host = RbConfig::CONFIG['host_os']
       v.memory = get_memory_setting(host)
       v.cpus = get_cpu_setting(host)
+      v.uri = 'qemu+unix:///system'
     end
   end
   # config.vm.provision "shell", inline: $shell
