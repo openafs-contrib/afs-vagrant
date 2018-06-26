@@ -71,6 +71,11 @@ apt-get install -y kernel-package --no-install-recommends
 pip install --upgrade pip
 yes | pip install robotframework
 
+# temporary libssl1.1 fix
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
+dpkg -i libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
+# end libssl1.1
+
 for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64; do
   echo "apt-get build-dep -y $package"
   apt-get build-dep -y $package
@@ -291,7 +296,7 @@ echo "path $PATH"
 cd ~/
 LAST_TESTED="/home/vagrant/last_tested"
 curl http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/current/CHECKSUMS | grep -e "generic.*amd64.deb" -e "linux-headers.*all.deb" > CHECKSUMS
-debs=$(cat CHECKSUMS | head -3 | awk '{ print $2}' | tr '\n' ' ')
+debs=$(cat CHECKSUMS | head -4 | awk '{ print $2}' | tr '\n' ' ')
 latest=$(head -1 CHECKSUMS | perl -pe "s/.*\.(.*)_all.deb/\1/")
 # Only do this if we have not done it before
 if [ -f "${LAST_TESTED}" ]; then
