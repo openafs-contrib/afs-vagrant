@@ -206,7 +206,7 @@ case "$1" in
     *.bash|*.*rc)
         pygmentize -f 256 -l sh "$1"
         ;;
-    *afs-robotest)
+    *afsrobot)
         pygmentize -f 256 -l py "$1"
         ;;
 
@@ -235,8 +235,10 @@ su -l -c 'cd ~/;git clone https://gerrit.openafs.org/openafs' $user
 su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' $user
 # su -l -c 'cd ~/openafs-robotest' $user
 cd $home/openafs-robotest
-./install.sh
+#./install.sh
+make install
 pip install --upgrade pip
+pip install afsutil
 
 cd $home
 # Automatically move into the shared folder, but only add the command
@@ -245,16 +247,16 @@ grep -s ". /home/vagrant/.bashrc" $home/.bash_profile || su -l -c 'echo ". /home
 su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' $user
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 # su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
-su -l -c 'afs-robotest config init' $user
-su -l -c 'afs-robotest config set host:$HOSTNAME installer transarc' $user
-su -l -c 'afs-robotest config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' $user
-su -l -c 'afs-robotest config set variables afs_dist transarc' $user
-su -l -c 'afs-robotest config set variables aklog /usr/bin/aklog-1.6.18' $user
-# su -l -c 'afs-robotest config set options dafileserver "-d 1 -p 128 -b 2049 -l 600 -s 600 -vc 600 -cb 1024000"' vagrant
+su -l -c 'afsrobot config init' $user
+su -l -c 'afsrobot config set host:$HOSTNAME installer transarc' $user
+su -l -c 'afsrobot config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' $user
+su -l -c 'afsrobot config set variables afs_dist transarc' $user
+su -l -c 'afsrobot config set variables aklog /usr/bin/aklog-1.6.18' $user
+# su -l -c 'afsrobot config set options dafileserver "-d 1 -p 128 -b 2049 -l 600 -s 600 -vc 600 -cb 1024000"' vagrant
 # disable fakestate to go faster
-# su -l -c 'afs-robotest config set options afsd '-dynroot -afsdb'
+# su -l -c 'afsrobot config set options afsd '-dynroot -afsdb'
 # To include more tests
-su -l -c 'afs-robotest config set run exclude_tags todo' $user
+su -l -c 'afsrobot config set run exclude_tags todo' $user
 
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
@@ -357,9 +359,9 @@ make distclean
 git clean -fxd
 ./regen.sh
 afsutil build # install kernel headers first, see below
-afs-robotest setup
-afs-robotest test
-# afs-robotest teardown
+afsrobot setup
+afsrobot test
+# afsrobot teardown
 
 # TODO: Report back to mothership with 'run' output
 # Set $LAST_TESTED for the kernel get script
