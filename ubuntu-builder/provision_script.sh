@@ -70,6 +70,7 @@ apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip 
 apt-get install -y kernel-package --no-install-recommends
 pip install --upgrade pip
 yes | pip install robotframework
+yes | pip install afsutil
 
 # temporary libssl1.1 fix
 wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
@@ -242,8 +243,6 @@ su -l -c 'cd ~/;git clone https://github.com/openafs-contrib/openafs-robotest' $
 cd $home/openafs-robotest
 #./install.sh
 make install
-pip install --upgrade pip
-pip install afsutil
 
 cd $home
 # Automatically move into the shared folder, but only add the command
