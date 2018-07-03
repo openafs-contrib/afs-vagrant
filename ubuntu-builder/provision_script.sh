@@ -253,10 +253,10 @@ su -l -c 'cd /vagrant;ln -s ~/openafs;ln -s ~/openafs-robotest' $user
 # su -l -c 'ln -s ~/linux; ln -s ~/linux /usr/src/linux;' vagrant
 # su -l -c 'mkdir -p ~/.afsrobotestrc;cp /vagrant/afs-robotest.conf ~/.afsrobotestrc/afs-robotest.conf' vagrant
 su -l -c 'afsrobot config init' $user
-su -l -c 'afsrobot config set host:$HOSTNAME installer transarc' $user
-su -l -c 'afsrobot config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' $user
-su -l -c 'afsrobot config set variables afs_dist transarc' $user
-su -l -c 'afsrobot config set variables aklog /usr/bin/aklog-1.6.18' $user
+#su -l -c 'afsrobot config set host:$HOSTNAME installer transarc' $user
+#su -l -c 'afsrobot config set host:$HOSTNAME dest $HOME/openafs/amd64_linux26/dest' $user
+#su -l -c 'afsrobot config set variables afs_dist transarc' $user
+su -l -c 'afsrobot config set paths.transarc aklog /usr/bin/aklog-1.6.18' $user
 # su -l -c 'afsrobot config set options dafileserver "-d 1 -p 128 -b 2049 -l 600 -s 600 -vc 600 -cb 1024000"' vagrant
 # disable fakestate to go faster
 # su -l -c 'afsrobot config set options afsd '-dynroot -afsdb'
