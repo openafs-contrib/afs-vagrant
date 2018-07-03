@@ -58,7 +58,8 @@ Owners: kexec-tools
 Flags: seen
 EOF
 
-# Update apt
+# Update sources and apt
+sed -i -e 's/# deb-src/deb-src/' /etc/apt/sources.list
 apt-get update
 
 echo "apt-get install -y packages"
@@ -376,12 +377,10 @@ touch ${MARKER_FILE}
 EOF
 chmod a+x $home/run_on_boot_script.sh
 chown $user:$user $home/run_on_boot_script.sh
-# su -l -c 'cd /vagrant;ln -s ~/run_on_boot_script.sh' vagrant
 # This actually needs to run after network comes up. systemd horror show: http://unix.stackexchange.com/questions/188042/running-a-script-during-booting-startup-init-d-vs-cron-reboot?answertab=votes#tab-top
-su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_on_boot_script.sh >> ~/run_on_boot_script.log 2>&1") | crontab -' $user
-# su -l -c 'touch /home/vagrant/run_on_boot_script.log; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
+#su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_on_boot_script.sh >> ~/run_on_boot_script.log 2>&1") | crontab -' $user
 
-echo "Updating kernel. May reboot."
+#echo "Updating kernel. May reboot."
 #su -l -c '~/run_periodic-mainline.sh' $user
 
 echo "You are almost there! Do this next: "
