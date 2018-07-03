@@ -73,7 +73,7 @@ yes | pip install robotframework
 yes | pip install afsutil
 
 # temporary libssl1.1 fix
-wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
+wget --quiet http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 dpkg -i libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 # end libssl1.1
 
@@ -337,7 +337,7 @@ sudo /sbin/shutdown -r now
 EOF
 chmod a+x $home/run_periodic-mainline.sh
 chown $user:$user $home/run_periodic-mainline.sh
-su -l -c '(crontab -l 2>/dev/null; echo "0 23 * * *  ~/run_periodic-mainline.sh >> ~/run_periodic-mainline.log 2>&1") | crontab -' $user
+#su -l -c '(crontab -l 2>/dev/null; echo "0 23 * * *  ~/run_periodic-mainline.sh >> ~/run_periodic-mainline.log 2>&1") | crontab -' $user
 
 
 cat <<"EOF" > $home/run_on_boot_script.sh
@@ -382,7 +382,7 @@ su -l -c '(crontab -l 2>/dev/null; echo "@reboot sleep 30 && /home/vagrant/run_o
 # su -l -c 'touch /home/vagrant/run_on_boot_script.log; cd /vagrant;ln -s /home/vagrant/run_on_boot_script.log' vagrant
 
 echo "Updating kernel. May reboot."
-su -l -c '~/run_periodic-mainline.sh' $user
+#su -l -c '~/run_periodic-mainline.sh' $user
 
 echo "You are almost there! Do this next: "
 echo "vagrant ssh"
