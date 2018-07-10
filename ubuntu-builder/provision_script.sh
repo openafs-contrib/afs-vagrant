@@ -66,7 +66,7 @@ echo "apt-get install -y packages"
 apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip kexec-tools \
     automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
     strace libelf-dev elfutils kernel-wedge cscope systemtap systemtap-doc systemtap-sdt-dev gdb \
-    vim tmux vim-addon-manager nfs-kernel-server curl # Optional
+    vim tmux vim-addon-manager nfs-kernel-server curl bash-completion # Optional
 
 apt-get install -y kernel-package --no-install-recommends
 pip install --upgrade pip
