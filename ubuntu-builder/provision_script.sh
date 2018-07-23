@@ -78,7 +78,8 @@ wget --quiet http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1
 dpkg -i libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 # end libssl1.1
 
-for package in linux-image-amd64 linux-image-amd64-dbg linux-headers-amd64; do
+version=$(uname -r)
+for package in linux-image-${version}; do
   echo "apt-get build-dep -y $package"
   apt-get build-dep -y $package
 done
