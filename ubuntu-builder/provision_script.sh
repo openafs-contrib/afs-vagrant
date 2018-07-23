@@ -75,6 +75,11 @@ pip install robotframework
 pip install afsutil
 #afsutil getdeps
 
+cd /tmp
+git clone https://github.com/openafs-contrib/robotframework-openafs
+cd robotframework-openafs
+make install
+
 # temporary libssl1.1 fix
 wget --quiet http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 dpkg -i libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
@@ -263,7 +268,7 @@ su -l -c 'afsrobot config set paths.transarc aklog /usr/bin/aklog-1.6.18' $user
 # disable fakestate to go faster
 # su -l -c 'afsrobot config set options afsd '-dynroot -afsdb'
 # To include more tests
-su -l -c 'afsrobot config set run exclude_tags todo' $user
+#su -l -c 'afsrobot config set run exclude_tags todo' $user
 
 cd /vagrant
 if [ ! -f aklog-1.6.18 ]; then
