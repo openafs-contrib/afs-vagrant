@@ -8,6 +8,7 @@ fi
 
 export user=vagrant
 export home=/home/$user
+export version=$(uname -r)
 
 # Get rid of the /boot partition, we will need the space to grow.
 if [ -d /boot ] && [ -d /boot-tmp ]; then
@@ -64,7 +65,7 @@ apt-get update
 
 echo "apt-get install -y packages"
 apt-get install -y git-core build-essential libncurses5-dev fakeroot python-pip kexec-tools \
-    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex \
+    automake libtool libkrb5-dev libroken18-heimdal bison gawk flex linux-headers-${version} \
     strace libelf-dev elfutils kernel-wedge cscope systemtap systemtap-doc systemtap-sdt-dev gdb \
     vim tmux vim-addon-manager nfs-kernel-server curl bash-completion # Optional
 
@@ -72,13 +73,13 @@ apt-get install -y kernel-package --no-install-recommends
 pip install --upgrade pip
 pip install robotframework
 pip install afsutil
+#afsutil getdeps
 
 # temporary libssl1.1 fix
 wget --quiet http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 dpkg -i libssl1.1_1.1.0g-2ubuntu4.1_amd64.deb
 # end libssl1.1
 
-version=$(uname -r)
 for package in linux-image-${version}; do
   echo "apt-get build-dep -y $package"
   apt-get build-dep -y $package
